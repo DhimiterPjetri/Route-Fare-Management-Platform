@@ -10,5 +10,6 @@ public class Route : AuditableEntity
     public bool IsActive { get; set; } = true;
     
     public virtual ICollection<TourOperatorRoute> TourOperatorRoutes { get; set; } = new List<TourOperatorRoute>();
+    public virtual ICollection<RouteBookingClass> RouteBookingClasses { get; set; } = new List<RouteBookingClass>();
     public virtual ICollection<Pricing> Pricings { get; set; } = new List<Pricing>();
 }

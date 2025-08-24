@@ -1,3 +1,5 @@
+using RouteFare.Application.DTOs.BookingClass;
+
 namespace RouteFare.Application.DTOs.TourOperatorRoute;
 
 public class TourOperatorRouteDto
@@ -12,4 +14,5 @@ public class TourOperatorRouteDto
     public int SeasonId { get; set; }
     public string SeasonName { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public List<BookingClassDto> AvailableBookingClasses { get; set; } = new List<BookingClassDto>();
 }

@@ -20,9 +20,6 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         var result = await _authService.LoginAsync(loginDto);
-        if (result == null)
-            return Unauthorized(new { message = "Invalid email or password" });
-
         return Ok(result);
     }
 
@@ -30,9 +27,6 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
         var result = await _authService.RegisterAsync(registerDto);
-        if (result == null)
-            return BadRequest(new { message = "Registration failed. Email may already exist." });
-
         return Ok(result);
     }
 
@@ -40,9 +34,6 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
     {
         var result = await _authService.RefreshTokenAsync(refreshTokenDto);
-        if (result == null)
-            return Unauthorized(new { message = "Invalid or expired refresh token" });
-
         return Ok(result);
     }
 
@@ -52,12 +43,9 @@ public class AuthController : ControllerBase
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
-            return BadRequest();
+            return BadRequest(new { message = "User ID not found in token" });
 
-        var result = await _authService.RevokeTokenAsync(userId);
-        if (!result)
-            return BadRequest(new { message = "Failed to revoke token" });
-
+        await _authService.RevokeTokenAsync(userId);
         return Ok(new { message = "Token revoked successfully" });
     }
 }

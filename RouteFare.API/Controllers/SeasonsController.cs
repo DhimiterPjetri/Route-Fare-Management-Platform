@@ -21,28 +21,28 @@ public class SeasonsController : ControllerBase
     public async Task<IActionResult> GetSeasons([FromQuery] SeasonFilterDto filter)
     {
         var result = await _seasonService.GetSeasonsAsync(filter);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetSeason(int id)
     {
         var result = await _seasonService.GetSeasonByIdAsync(id);
-        return result.IsSuccess ? Ok(result.Data) : NotFound(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrentSeason()
     {
         var result = await _seasonService.GetCurrentSeasonAsync();
-        return result.IsSuccess ? Ok(result.Data) : NotFound(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("active")]
     public async Task<IActionResult> GetActiveSeasons()
     {
         var result = await _seasonService.GetActiveSeasonsAsync();
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPost]
@@ -53,7 +53,7 @@ public class SeasonsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _seasonService.CreateSeasonsForYearAsync(dto);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPut("{id}")]
@@ -64,6 +64,6 @@ public class SeasonsController : ControllerBase
             return BadRequest("Season ID mismatch");
 
         var result = await _seasonService.UpdateSeasonAsync(dto);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 }

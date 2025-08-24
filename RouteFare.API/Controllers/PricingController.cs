@@ -28,7 +28,7 @@ public class PricingController : ControllerBase
     public async Task<IActionResult> GetPricingTable(int tourOperatorRouteId)
     {
         var result = await _pricingService.GetPricingTableAsync(tourOperatorRouteId);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("date-range")]
@@ -39,7 +39,7 @@ public class PricingController : ControllerBase
         [FromQuery] DateTime endDate)
     {
         var result = await _pricingService.GetPricingByDateRangeAsync(tourOperatorId, routeId, startDate, endDate);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPut]
@@ -49,8 +49,8 @@ public class PricingController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var result = await _pricingService.UpdatePricingAsync(dto);
-        return result.IsSuccess ? Ok("Pricing updated successfully") : BadRequest(result.Error);
+        await _pricingService.UpdatePricingAsync(dto);
+        return Ok("Pricing updated successfully");
     }
 
     [HttpPut("bulk")]
@@ -60,7 +60,7 @@ public class PricingController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var result = await _pricingService.BulkUpdatePricingAsync(dto);
-        return result.IsSuccess ? Ok("Bulk pricing update successful") : BadRequest(result.Error);
+        await _pricingService.BulkUpdatePricingAsync(dto);
+        return Ok("Bulk pricing update successful");
     }
 }

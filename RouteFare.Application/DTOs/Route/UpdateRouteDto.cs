@@ -16,4 +16,7 @@ public class UpdateRouteDto
     public string Destination { get; set; } = string.Empty;
     
     public bool IsActive { get; set; }
+    
+    [Required]
+    public List<int> BookingClassIds { get; set; } = new List<int>();
 }

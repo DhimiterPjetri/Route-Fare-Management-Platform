@@ -5,6 +5,7 @@ using RouteFare.Application.Common.Interfaces;
 using RouteFare.Application.DTOs.Auth;
 using RouteFare.Domain.Entities;
 using RouteFare.Domain.Enums;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.Infrastructure.Services;
 
@@ -31,11 +32,11 @@ public class AuthService : IAuthService
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
         if (user == null)
-            return null;
+            throw new UnauthorizedException("Invalid email or password");
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
         if (!result.Succeeded)
-            return null;
+            throw new UnauthorizedException("Invalid email or password");
 
         var roles = await _userManager.GetRolesAsync(user);
         var role = roles.FirstOrDefault() ?? UserRole.TourOperator;
@@ -69,7 +70,7 @@ public class AuthService : IAuthService
     {
         var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
         if (existingUser != null)
-            return null;
+            throw new BusinessException("Email already exists");
 
         var user = new ApplicationUser
         {
@@ -85,8 +86,7 @@ public class AuthService : IAuthService
         if (!result.Succeeded)
         {
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            Console.WriteLine($"User creation failed: {errors}");
-            return null;
+            throw new BusinessException($"Registration failed: {errors}");
         }
 
         if (!await _roleManager.RoleExistsAsync(registerDto.Role))
@@ -124,16 +124,16 @@ public class AuthService : IAuthService
     {
         var principal = _jwtService.ValidateToken(refreshTokenDto.AccessToken);
         if (principal == null)
-            return null;
+            throw new UnauthorizedException("Invalid access token");
 
         var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
-            return null;
+            throw new UnauthorizedException("Invalid token claims");
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null || user.RefreshToken != refreshTokenDto.RefreshToken || 
             user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-            return null;
+            throw new UnauthorizedException("Invalid or expired refresh token");
 
         var roles = await _userManager.GetRolesAsync(user);
         var role = roles.FirstOrDefault() ?? UserRole.TourOperator;
@@ -166,7 +166,7 @@ public class AuthService : IAuthService
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
-            return false;
+            throw new NotFoundException("User not found");
 
         user.RefreshToken = string.Empty;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(-1);

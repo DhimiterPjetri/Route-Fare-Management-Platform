@@ -16,7 +16,6 @@ public static class DependencyInjection
         // Add FluentValidation
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        // Add MediatR (if using CQRS pattern)
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         // Register application services

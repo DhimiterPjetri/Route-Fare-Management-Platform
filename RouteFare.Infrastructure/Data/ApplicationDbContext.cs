@@ -24,6 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<TourOperator> TourOperators { get; set; }
     public DbSet<BookingClass> BookingClasses { get; set; }
     public DbSet<TourOperatorBookingClass> TourOperatorBookingClasses { get; set; }
+    public DbSet<RouteBookingClass> RouteBookingClasses { get; set; }
     public DbSet<TourOperatorRoute> TourOperatorRoutes { get; set; }
     public DbSet<Pricing> Pricings { get; set; }
 

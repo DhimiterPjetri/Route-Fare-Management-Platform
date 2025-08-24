@@ -16,4 +16,7 @@ public class CreateRouteDto
     public string? RouteCode { get; set; }
     
     public bool IsActive { get; set; } = true;
+    
+    [Required]
+    public List<int> BookingClassIds { get; set; } = new List<int>();
 }

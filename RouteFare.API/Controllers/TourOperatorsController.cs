@@ -22,14 +22,14 @@ public class TourOperatorsController : ControllerBase
     public async Task<IActionResult> GetTourOperators([FromQuery] TourOperatorFilterDto filter)
     {
         var result = await _tourOperatorService.GetTourOperatorsAsync(filter);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTourOperator(int id)
     {
         var result = await _tourOperatorService.GetTourOperatorByIdAsync(id);
-        return result.IsSuccess ? Ok(result.Data) : NotFound(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPost]
@@ -40,9 +40,7 @@ public class TourOperatorsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _tourOperatorService.CreateTourOperatorAsync(dto);
-        return result.IsSuccess
-            ? CreatedAtAction(nameof(GetTourOperator), new { id = result.Data?.Id }, result.Data)
-            : BadRequest(result.Error);
+        return CreatedAtAction(nameof(GetTourOperator), new { id = result.Data?.Id }, result.Data);
     }
 
     [HttpPut("{id}")]
@@ -55,7 +53,7 @@ public class TourOperatorsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _tourOperatorService.UpdateTourOperatorAsync(dto);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPost("assign-routes")]
@@ -65,6 +63,6 @@ public class TourOperatorsController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _tourOperatorService.AssignRoutesToSeasonAsync(dto);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 }

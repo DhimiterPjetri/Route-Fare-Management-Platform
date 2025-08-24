@@ -7,6 +7,7 @@ using RouteFare.Application.Common.Models;
 using RouteFare.Application.DTOs.Export;
 using RouteFare.Domain.Entities;
 using System.Drawing;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.Application.Services;
 
@@ -34,12 +35,10 @@ public class ExcelExportService : IExcelExportService
             var jobId = Guid.NewGuid().ToString();
             await SendProgressUpdate(jobId, 0, "Starting export...");
 
-            // Set EPPlus license for non-commercial personal use
             ExcelPackage.License.SetNonCommercialPersonal("RouteFare Development");
 
             using var package = new ExcelPackage();
 
-            // Apply authorization filter
             var query = _context.Set<Pricing>()
                 .Include(p => p.TourOperator)
                 .Include(p => p.Route)
@@ -55,7 +54,7 @@ public class ExcelExportService : IExcelExportService
                 }
                 else
                 {
-                    return Result<byte[]>.Failure("Unauthorized");
+                    throw new UnauthorizedException("Unauthorized");
                 }
             }
 
@@ -69,6 +68,7 @@ public class ExcelExportService : IExcelExportService
                 query = query.Where(p => p.RouteId == request.RouteId.Value);
 
             await SendProgressUpdate(jobId, 20, "Fetching data...");
+            await Task.Delay(1000); 
             var pricingData = await query.ToListAsync();
 
             if (request.IncludeSummary)
@@ -84,6 +84,7 @@ public class ExcelExportService : IExcelExportService
             }
 
             await SendProgressUpdate(jobId, 80, "Finalizing export...");
+            await Task.Delay(500);
             var excelData = package.GetAsByteArray();
 
             await SendProgressUpdate(jobId, 100, "Export complete!");
@@ -91,7 +92,7 @@ public class ExcelExportService : IExcelExportService
         }
         catch (Exception ex)
         {
-            return Result<byte[]>.Failure($"Export failed: {ex.Message}");
+            throw new BusinessException($"Export failed: {ex.Message}");
         }
     }
 
@@ -99,7 +100,6 @@ public class ExcelExportService : IExcelExportService
     {
         var worksheet = package.Workbook.Worksheets.Add("Summary");
 
-        // Headers
         worksheet.Cells[1, 1].Value = "Tour Operator";
         worksheet.Cells[1, 2].Value = "Route";
         worksheet.Cells[1, 3].Value = "Season";
@@ -110,7 +110,6 @@ public class ExcelExportService : IExcelExportService
         worksheet.Cells[1, 8].Value = "Max Price";
         worksheet.Cells[1, 9].Value = "Total Seats Requested";
 
-        // Style headers
         using (var range = worksheet.Cells[1, 1, 1, 9])
         {
             range.Style.Font.Bold = true;
@@ -119,7 +118,6 @@ public class ExcelExportService : IExcelExportService
             range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
         }
 
-        // Group and summarize data
         var summaryData = pricingData
             .GroupBy(p => new
             {
@@ -142,7 +140,6 @@ public class ExcelExportService : IExcelExportService
             })
             .ToList();
 
-        // Populate data
         int row = 2;
         foreach (var item in summaryData)
         {
@@ -156,13 +153,11 @@ public class ExcelExportService : IExcelExportService
             worksheet.Cells[row, 8].Value = item.MaxPrice;
             worksheet.Cells[row, 9].Value = item.TotalSeats;
 
-            // Format currency cells
             worksheet.Cells[row, 6, row, 8].Style.Numberformat.Format = "$#,##0.00";
 
             row++;
         }
 
-        // Auto-fit columns
         worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
     }
 
@@ -188,7 +183,6 @@ public class ExcelExportService : IExcelExportService
             worksheet.Cells[1, col++].Value = $"{bookingClass.Name} Seats";
         }
 
-        // Style headers
         using (var range = worksheet.Cells[1, 1, 1, col - 1])
         {
             range.Style.Font.Bold = true;
@@ -198,7 +192,6 @@ public class ExcelExportService : IExcelExportService
             range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
         }
 
-        // Group data by tour operator, route, season, and date
         var groupedData = pricingData
             .GroupBy(p => new
             {
@@ -213,7 +206,6 @@ public class ExcelExportService : IExcelExportService
             .ThenBy(g => g.Key.Date)
             .ToList();
 
-        // Populate data
         int row = 2;
         foreach (var group in groupedData)
         {

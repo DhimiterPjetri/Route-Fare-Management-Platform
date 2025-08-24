@@ -5,6 +5,7 @@ using RouteFare.Application.DTOs.Season;
 using RouteFare.Domain.Entities;
 using RouteFare.Domain.Enums;
 using RouteFare.Domain.Interfaces;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.Application.Services;
 
@@ -25,7 +26,6 @@ public class SeasonService : ISeasonService
     {
         var query = await _unitOfWork.Seasons.GetAllAsync();
 
-        // Apply filters
         if (filter.Year.HasValue)
             query = query.Where(s => s.Year == filter.Year.Value);
         
@@ -38,7 +38,6 @@ public class SeasonService : ISeasonService
         if (!string.IsNullOrEmpty(filter.SearchTerm))
             query = query.Where(s => s.Name.Contains(filter.SearchTerm, StringComparison.OrdinalIgnoreCase));
 
-        // Sorting
         query = filter.SortBy?.ToLower() switch
         {
             "year" => filter.SortDescending ? query.OrderByDescending(s => s.Year) : query.OrderBy(s => s.Year),
@@ -47,7 +46,6 @@ public class SeasonService : ISeasonService
             _ => filter.SortDescending ? query.OrderByDescending(s => s.Id) : query.OrderBy(s => s.Id)
         };
 
-        // Pagination
         var totalCount = query.Count();
         var items = query
             .Skip((filter.PageNumber - 1) * filter.PageSize)
@@ -64,7 +62,7 @@ public class SeasonService : ISeasonService
     {
         var season = await _unitOfWork.Seasons.GetByIdAsync(id);
         if (season == null)
-            return Result<SeasonDto>.Failure("Season not found");
+            throw new NotFoundException("Season not found");
 
         var seasonDto = _mapper.Map<SeasonDto>(season);
         return Result<SeasonDto>.Success(seasonDto);
@@ -72,16 +70,14 @@ public class SeasonService : ISeasonService
 
     public async Task<Result<List<SeasonDto>>> CreateSeasonsForYearAsync(CreateSeasonDto dto)
     {
-        // Admin only
         if (!_currentUser.IsAdmin)
-            return Result<List<SeasonDto>>.Failure("Unauthorized");
+            throw new UnauthorizedException("Only administrators can create seasons");
 
-        // Check if seasons already exist for this year
         var existingWinter = await _unitOfWork.Seasons.GetByYearAndTypeAsync(dto.Year, SeasonType.Winter);
         var existingSummer = await _unitOfWork.Seasons.GetByYearAndTypeAsync(dto.Year, SeasonType.Summer);
 
         if (existingWinter != null || existingSummer != null)
-            return Result<List<SeasonDto>>.Failure($"Seasons already exist for year {dto.Year}");
+            throw new BusinessException($"Seasons already exist for year {dto.Year}");
 
         var seasons = new List<Season>();
 
@@ -122,13 +118,12 @@ public class SeasonService : ISeasonService
 
     public async Task<Result<SeasonDto>> UpdateSeasonAsync(UpdateSeasonDto dto)
     {
-        // Admin only
         if (!_currentUser.IsAdmin)
-            return Result<SeasonDto>.Failure("Unauthorized");
+            throw new UnauthorizedException("Only administrators can update seasons");
 
         var season = await _unitOfWork.Seasons.GetByIdAsync(dto.Id);
         if (season == null)
-            return Result<SeasonDto>.Failure("Season not found");
+            throw new NotFoundException("Season not found");
 
         season.IsActive = dto.IsActive;
         await _unitOfWork.Seasons.UpdateAsync(season);
@@ -142,7 +137,7 @@ public class SeasonService : ISeasonService
     {
         var currentSeason = await _unitOfWork.Seasons.GetCurrentSeasonAsync();
         if (currentSeason == null)
-            return Result<SeasonDto>.Failure("No active season found for current date");
+            throw new NotFoundException("No active season found for current date");
 
         var seasonDto = _mapper.Map<SeasonDto>(currentSeason);
         return Result<SeasonDto>.Success(seasonDto);

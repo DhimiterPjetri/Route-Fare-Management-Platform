@@ -5,6 +5,7 @@ using RouteFare.Application.Common.Models;
 using RouteFare.Application.DTOs.Pricing;
 using RouteFare.Domain.Entities;
 using RouteFare.Domain.Interfaces;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.Application.Services;
 
@@ -36,10 +37,10 @@ public class PricingService : IPricingService
             .FirstOrDefaultAsync(tr => tr.Id == tourOperatorRouteId);
 
         if (tourOperatorRoute == null)
-            return Result<PricingTableDto>.Failure("Tour operator route not found");
+            throw new NotFoundException("Tour operator route not found");
 
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorRoute.TourOperatorId)
-            return Result<PricingTableDto>.Failure("Unauthorized");
+            throw new UnauthorizedException("Unauthorized to access this pricing data");
 
         var pricings = await _context.Set<Pricing>()
             .Include(p => p.BookingClass)
@@ -88,13 +89,11 @@ public class PricingService : IPricingService
             .Include(p => p.BookingClass)
             .AsQueryable();
 
-        // Apply authorization filter
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId.HasValue)
         {
             query = query.Where(p => p.TourOperatorId == _currentUser.TourOperatorId.Value);
         }
 
-        // Apply filters
         if (filter.TourOperatorId.HasValue)
             query = query.Where(p => p.TourOperatorId == filter.TourOperatorId.Value);
 
@@ -110,7 +109,6 @@ public class PricingService : IPricingService
         if (filter.EndDate.HasValue)
             query = query.Where(p => p.Date <= filter.EndDate.Value);
 
-        // Sorting
         query = filter.SortBy?.ToLower() switch
         {
             "date" => filter.SortDescending ? query.OrderByDescending(p => p.Date) : query.OrderBy(p => p.Date),
@@ -118,7 +116,6 @@ public class PricingService : IPricingService
             _ => query.OrderBy(p => p.Date).ThenBy(p => p.BookingClass.DisplayOrder)
         };
 
-        // Pagination
         var totalCount = await query.CountAsync();
         var items = await query
             .Skip((filter.PageNumber - 1) * filter.PageSize)
@@ -137,11 +134,10 @@ public class PricingService : IPricingService
             .FirstOrDefaultAsync(tr => tr.Id == dto.TourOperatorRouteId);
 
         if (tourOperatorRoute == null)
-            return Result.Failure("Tour operator route not found");
+            throw new NotFoundException("Tour operator route not found");
 
-        // Check authorization - only the tour operator can update their own pricing
         if (_currentUser.TourOperatorId != tourOperatorRoute.TourOperatorId)
-            return Result.Failure("Unauthorized to update pricing");
+            throw new UnauthorizedException("Unauthorized to update pricing");
 
         foreach (var update in dto.Updates)
         {
@@ -166,19 +162,16 @@ public class PricingService : IPricingService
 
     public async Task<Result> BulkUpdatePricingAsync(BulkPricingUpdateDto dto)
     {
-        // Get the tour operator route to check authorization
         var tourOperatorRoute = await _context.Set<TourOperatorRoute>()
             .Include(tr => tr.Season)
             .FirstOrDefaultAsync(tr => tr.Id == dto.TourOperatorRouteId);
 
         if (tourOperatorRoute == null)
-            return Result.Failure("Tour operator route not found");
+            throw new NotFoundException("Tour operator route not found");
 
-        // Check authorization
         if (_currentUser.TourOperatorId != tourOperatorRoute.TourOperatorId)
-            return Result.Failure("Unauthorized to update pricing");
+            throw new UnauthorizedException("Unauthorized to update pricing");
 
-        // Get pricing records to update based on update type
         var pricingsQuery = _context.Set<Pricing>()
             .Where(p => p.TourOperatorRouteId == dto.TourOperatorRouteId);
 
@@ -227,9 +220,8 @@ public class PricingService : IPricingService
         DateTime startDate,
         DateTime endDate)
     {
-        // Check authorization
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorId)
-            return Result<List<PricingDto>>.Failure("Unauthorized");
+            throw new UnauthorizedException("Unauthorized to access this pricing data");
 
         var pricings = await _context.Set<Pricing>()
             .Include(p => p.TourOperator)

@@ -5,6 +5,7 @@ using RouteFare.Application.Common.Interfaces;
 using RouteFare.Application.DTOs.BookingClass;
 using RouteFare.Domain.Entities;
 using AutoMapper;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.API.Controllers;
 
@@ -45,7 +46,7 @@ public class BookingClassesController : ControllerBase
         var bookingClass = await _context.BookingClasses.FindAsync(id);
 
         if (bookingClass == null)
-            return NotFound("Booking class not found");
+            throw new NotFoundException("Booking class not found");
 
         var dto = _mapper.Map<BookingClassDto>(bookingClass);
         return Ok(dto);
@@ -54,9 +55,8 @@ public class BookingClassesController : ControllerBase
     [HttpGet("tour-operator/{tourOperatorId}")]
     public async Task<IActionResult> GetTourOperatorBookingClasses(int tourOperatorId)
     {
-        // Check authorization
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorId)
-            return Forbid("You can only view your own booking classes");
+            throw new ForbiddenException("You can only view your own booking classes");
 
         var bookingClasses = await _context.Set<TourOperatorBookingClass>()
             .Include(tb => tb.BookingClass)
@@ -76,12 +76,11 @@ public class BookingClassesController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        // Check for duplicate code
         var existingClass = await _context.BookingClasses
             .FirstOrDefaultAsync(bc => bc.Code == dto.Code);
 
         if (existingClass != null)
-            return BadRequest("Booking class with this code already exists");
+            throw new BusinessException("Booking class with this code already exists");
 
         var bookingClass = new BookingClass
         {
@@ -110,7 +109,7 @@ public class BookingClassesController : ControllerBase
 
         var bookingClass = await _context.BookingClasses.FindAsync(id);
         if (bookingClass == null)
-            return NotFound("Booking class not found");
+            throw new NotFoundException("Booking class not found");
 
         bookingClass.Name = dto.Name;
         bookingClass.DisplayOrder = dto.DisplayOrder;
@@ -129,14 +128,13 @@ public class BookingClassesController : ControllerBase
     {
         var bookingClass = await _context.BookingClasses.FindAsync(id);
         if (bookingClass == null)
-            return NotFound("Booking class not found");
+            throw new NotFoundException("Booking class not found");
 
-        // Check if booking class is being used
         var isUsed = await _context.Set<TourOperatorBookingClass>()
             .AnyAsync(tb => tb.BookingClassId == id);
 
         if (isUsed)
-            return BadRequest("Cannot delete booking class that is assigned to tour operators");
+            throw new BusinessException("Cannot delete booking class that is assigned to tour operators");
 
         _context.BookingClasses.Remove(bookingClass);
         await _context.SaveChangesAsync();

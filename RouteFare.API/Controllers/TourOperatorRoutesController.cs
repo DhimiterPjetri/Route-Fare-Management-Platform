@@ -5,6 +5,7 @@ using RouteFare.Application.Common.Interfaces;
 using RouteFare.Application.DTOs.TourOperatorRoute;
 using RouteFare.Domain.Entities;
 using AutoMapper;
+using RouteFare.Application.Common.Exceptions;
 
 namespace RouteFare.API.Controllers;
 
@@ -28,15 +29,16 @@ public class TourOperatorRoutesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTourOperatorRoutes([FromQuery] int? tourOperatorId, [FromQuery] int? seasonId)
+    public async Task<IActionResult> GetTourOperatorRoutes([FromQuery] int? tourOperatorId, [FromQuery] int? seasonId, [FromQuery] int? routeId)
     {
         var query = _context.Set<TourOperatorRoute>()
             .Include(tr => tr.TourOperator)
             .Include(tr => tr.Route)
+                .ThenInclude(r => r.RouteBookingClasses)
+                    .ThenInclude(rbc => rbc.BookingClass)
             .Include(tr => tr.Season)
             .AsQueryable();
 
-        // Apply authorization filter
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId.HasValue)
         {
             query = query.Where(tr => tr.TourOperatorId == _currentUser.TourOperatorId.Value);
@@ -49,6 +51,11 @@ public class TourOperatorRoutesController : ControllerBase
         if (seasonId.HasValue)
         {
             query = query.Where(tr => tr.SeasonId == seasonId.Value);
+        }
+
+        if (routeId.HasValue)
+        {
+            query = query.Where(tr => tr.RouteId == routeId.Value);
         }
 
         var tourOperatorRoutes = await query
@@ -66,15 +73,16 @@ public class TourOperatorRoutesController : ControllerBase
         var tourOperatorRoute = await _context.Set<TourOperatorRoute>()
             .Include(tr => tr.TourOperator)
             .Include(tr => tr.Route)
+                .ThenInclude(r => r.RouteBookingClasses)
+                    .ThenInclude(rbc => rbc.BookingClass)
             .Include(tr => tr.Season)
             .FirstOrDefaultAsync(tr => tr.Id == id);
 
         if (tourOperatorRoute == null)
-            return NotFound("Tour operator route not found");
+            throw new NotFoundException("Tour operator route not found");
 
-        // Check authorization
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorRoute.TourOperatorId)
-            return Forbid();
+            throw new ForbiddenException("You can only access your own routes");
 
         var dto = _mapper.Map<TourOperatorRouteDto>(tourOperatorRoute);
         return Ok(dto);
@@ -88,15 +96,14 @@ public class TourOperatorRoutesController : ControllerBase
             .FirstOrDefaultAsync(tr => tr.Id == id);
 
         if (tourOperatorRoute == null)
-            return NotFound("Tour operator route not found");
+            throw new NotFoundException("Tour operator route not found");
 
-        // Check authorization
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorRoute.TourOperatorId)
-            return Forbid();
+            throw new ForbiddenException("You can only remove your own routes");
 
         var today = DateTime.UtcNow.Date;
         if (tourOperatorRoute.Season.StartDate <= today && tourOperatorRoute.Season.EndDate >= today)
-            return BadRequest("Cannot remove routes from seasons that are currently active");
+            throw new BusinessException("Cannot remove routes from seasons that are currently active");
 
         var pricings = await _context.Set<Pricing>()
             .Where(p => p.TourOperatorRouteId == id)

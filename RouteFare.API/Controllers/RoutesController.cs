@@ -21,21 +21,21 @@ public class RoutesController : ControllerBase
     public async Task<IActionResult> GetRoutes([FromQuery] RouteFilterDto filter)
     {
         var result = await _routeService.GetRoutesAsync(filter);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetRoute(int id)
     {
         var result = await _routeService.GetRouteByIdAsync(id);
-        return result.IsSuccess ? Ok(result.Data) : NotFound(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpGet("available")]
     public async Task<IActionResult> GetAvailableRoutes()
     {
         var result = await _routeService.GetAvailableRoutesAsync();
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpPost]
@@ -46,9 +46,7 @@ public class RoutesController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _routeService.CreateRouteAsync(dto);
-        return result.IsSuccess
-            ? CreatedAtAction(nameof(GetRoute), new { id = result.Data?.Id }, result.Data)
-            : BadRequest(result.Error);
+        return CreatedAtAction(nameof(GetRoute), new { id = result.Data?.Id }, result.Data);
     }
 
     [HttpPut("{id}")]
@@ -62,14 +60,14 @@ public class RoutesController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _routeService.UpdateRouteAsync(dto);
-        return result.IsSuccess ? Ok(result.Data) : BadRequest(result.Error);
+        return Ok(result.Data);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteRoute(int id)
     {
-        var result = await _routeService.DeleteRouteAsync(id);
-        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+        await _routeService.DeleteRouteAsync(id);
+        return NoContent();
     }
 }

@@ -1,3 +1,5 @@
+using RouteFare.Application.DTOs.BookingClass;
+
 namespace RouteFare.Application.DTOs.Route;
 
 public class RouteDto
@@ -9,4 +11,5 @@ public class RouteDto
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
+    public List<BookingClassDto> AvailableBookingClasses { get; set; } = new List<BookingClassDto>();
 }

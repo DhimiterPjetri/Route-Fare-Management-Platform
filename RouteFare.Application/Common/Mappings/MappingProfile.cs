@@ -18,13 +18,19 @@ public class MappingProfile : Profile
         CreateMap<ApplicationUser, UserDto>()
             .ForMember(d => d.Role, opt => opt.Ignore()); 
 
-        CreateMap<Route, RouteDto>();
+        CreateMap<Route, RouteDto>()
+            .ForMember(d => d.AvailableBookingClasses, opt => opt.MapFrom(s => 
+                s.RouteBookingClasses.Where(rbc => rbc.IsActive)
+                    .Select(rbc => rbc.BookingClass)
+                    .OrderBy(bc => bc.DisplayOrder)));
         CreateMap<CreateRouteDto, Route>()
             .ForMember(d => d.RouteCode, opt => opt.MapFrom(s => 
                 string.IsNullOrEmpty(s.RouteCode) 
                     ? $"{s.Origin.Substring(0, 3).ToUpper()}-{s.Destination.Substring(0, 3).ToUpper()}" 
-                    : s.RouteCode));
-        CreateMap<UpdateRouteDto, Route>();
+                    : s.RouteCode))
+            .ForMember(d => d.RouteBookingClasses, opt => opt.Ignore());
+        CreateMap<UpdateRouteDto, Route>()
+            .ForMember(d => d.RouteBookingClasses, opt => opt.Ignore());
 
         CreateMap<Season, SeasonDto>()
             .ForMember(d => d.Type, opt => opt.MapFrom(s => s.Type.ToString()));
@@ -43,7 +49,11 @@ public class MappingProfile : Profile
             .ForMember(d => d.RouteCode, opt => opt.MapFrom(s => s.Route.RouteCode))
             .ForMember(d => d.Origin, opt => opt.MapFrom(s => s.Route.Origin))
             .ForMember(d => d.Destination, opt => opt.MapFrom(s => s.Route.Destination))
-            .ForMember(d => d.SeasonName, opt => opt.MapFrom(s => s.Season.Name));
+            .ForMember(d => d.SeasonName, opt => opt.MapFrom(s => s.Season.Name))
+            .ForMember(d => d.AvailableBookingClasses, opt => opt.MapFrom(s => 
+                s.Route.RouteBookingClasses.Where(rbc => rbc.IsActive)
+                    .Select(rbc => rbc.BookingClass)
+                    .OrderBy(bc => bc.DisplayOrder)));
 
         CreateMap<Pricing, PricingDto>()
             .ForMember(d => d.TourOperatorName, opt => opt.MapFrom(s => s.TourOperator.Name))

@@ -10,5 +10,6 @@ public class BookingClass : BaseEntity
     public bool IsActive { get; set; } = true;
     
     public virtual ICollection<TourOperatorBookingClass> TourOperatorBookingClasses { get; set; } = new List<TourOperatorBookingClass>();
+    public virtual ICollection<RouteBookingClass> RouteBookingClasses { get; set; } = new List<RouteBookingClass>();
     public virtual ICollection<Pricing> Pricings { get; set; } = new List<Pricing>();
 }
