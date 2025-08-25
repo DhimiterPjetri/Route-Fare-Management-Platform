@@ -1,0 +1,27 @@
+<mat-card class="status-toggle-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{ title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="confirmation-content">
+      <mat-icon class="status-icon" [class.deactivate]="isDestructiveAction" [class.activate]="!isDestructiveAction">
+        {{ isDestructiveAction ? 'toggle_off' : 'toggle_on' }}
+      </mat-icon>
+      <p class="confirmation-message">{{ message }}</p>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" class="cancel-button">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      [color]="isDestructiveAction ? 'warn' : 'primary'"
+      (click)="onConfirm()"
+      class="confirm-button">
+      {{ confirmButtonText }}
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,238 @@
+.tour-operators-list-container {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.list-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 24px;
+
+  .header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .new-button,
+    .filters-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.filters-container {
+  border-bottom: 1px solid #e0e0e0;
+  overflow: hidden;
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .filter-actions {
+    padding: 0 16px 16px;
+    display: flex;
+    justify-content: flex-start;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.list-content {
+  flex: 1;
+  padding: 0 !important;
+}
+
+.loading-container, 
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px;
+  flex: 1;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 16px 0;
+  }
+}
+
+.table-container {
+  flex: 1;
+  overflow: auto;
+
+  .operators-table {
+    width: 100%;
+
+    .mat-mdc-header-cell {
+      font-weight: 500;
+      color: #05164d;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .company-info {
+      .company-name {
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+
+      &.status-active {
+        background-color: #e8f5e8;
+        color: #2e7d32;
+      }
+
+      &.status-inactive {
+        background-color: #fce4ec;
+        color: #c2185b;
+      }
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .mat-column-actions {
+      text-align: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+      .action-btn {
+        &.routes-btn {
+          color: #689f38;
+        }
+
+        &.edit-btn {
+          color: #1976d2;
+        }
+
+        &.toggle-btn {
+        }
+      }
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 48px;
+    color: #666;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 0 0 8px 0;
+    }
+
+    .no-data-subtitle {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+}
+
+.card-footer {
+  border-top: 1px solid #e0e0e0;
+  padding: 0;
+
+  mat-paginator {
+    border: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tour-operators-list-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  .filters-container .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-container {
+    overflow-x: auto;
+
+    .operators-table {
+      min-width: 600px;
+    }
+  }
+
+  .card-header .header-actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+}

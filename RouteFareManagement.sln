@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteFare.Application", "Ro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteFare.API", "RouteFare.API\RouteFare.API.csproj", "{3D99CED0-7572-9977-4A8A-670525975765}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RouteFare.Frontend", "RouteFare.Frontend", "{F5E8B5A1-2D4A-4F6B-8C7D-9E3F1A2B5C6D}"
+	ProjectSection(SolutionItems) = preProject
+		RouteFare.Frontend\package.json = RouteFare.Frontend\package.json
+		RouteFare.Frontend\angular.json = RouteFare.Frontend\angular.json
+		RouteFare.Frontend\README.md = RouteFare.Frontend\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

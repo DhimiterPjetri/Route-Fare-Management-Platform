@@ -1,0 +1,113 @@
+<mat-card class="route-usage-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">Route Usage: {{data.route.routeCode}}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="route-info">
+      <h3>Route Details</h3>
+      <div class="route-details-grid">
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>code</mat-icon>
+                <div>
+                  <div class="detail-label">Route Code</div>
+                  <div class="detail-value">{{data.route.routeCode}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>flight_takeoff</mat-icon>
+                <div>
+                  <div class="detail-label">Origin</div>
+                  <div class="detail-value">{{data.route.origin}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>flight_land</mat-icon>
+                <div>
+                  <div class="detail-label">Destination</div>
+                  <div class="detail-value">{{data.route.destination}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>{{data.route.isActive ? 'check_circle' : 'cancel'}}</mat-icon>
+                <div>
+                  <div class="detail-label">Status</div>
+                  <div class="detail-value">
+                    <span [class]="data.route.isActive ? 'status-active' : 'status-inactive'">
+                      {{data.route.isActive ? 'Active' : 'Inactive'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="assignments-section">
+      <h3>Current Assignments</h3>
+      
+      <div *ngIf="!hasAssignments()" class="no-assignments">
+        <mat-icon>info</mat-icon>
+        <p>This route is not currently assigned to any tour operators.</p>
+      </div>
+
+      <div *ngIf="hasAssignments()" class="assignments-list">
+        <mat-card *ngFor="let assignment of data.assignments" class="assignment-card">
+          <mat-card-content>
+            <div class="assignment-info">
+              <div class="operator-info">
+                <mat-icon>business</mat-icon>
+                <div>
+                  <div class="operator-name">{{getTourOperatorName(assignment)}}</div>
+                  <div class="season-name">Season: {{getSeasonName(assignment)}}</div>
+                </div>
+              </div>
+              
+              <div class="assignment-details">
+                <div class="detail-chip">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{assignment.assignedAt | date:'MMM d, y'}}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onClose()" color="primary">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,180 @@
+.dialog-container {
+  max-width: 600px;
+  width: 100%;
+  
+  .mat-mdc-card-content {
+    background-color: transparent !important;
+    padding: 20px 24px !important;
+  }
+}
+
+.pricing-info {
+  margin-bottom: 24px;
+  
+  .date-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    
+    mat-icon {
+      color: #1976d2;
+    }
+  }
+  
+  .help-text {
+    color: #666;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.pricing-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.pricing-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  mat-card-content {
+    padding: 16px !important;
+
+    .pricing-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      
+      .booking-class-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+
+        mat-icon {
+          color: #1976d2;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        .class-label {
+          color: #666;
+          font-size: 12px;
+          font-weight: 500;
+          margin-bottom: 4px;
+        }
+
+        .class-value {
+          color: #333;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+      
+      .pricing-fields {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        
+        .price-field, .seats-field {
+          margin-bottom: 0;
+          width: 120px;
+          
+          ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+          }
+          
+          ::ng-deep .mat-mdc-text-field-wrapper {
+            height: 36px;
+            min-height: 36px;
+          }
+          
+          ::ng-deep .mat-mdc-form-field-infix {
+            padding: 8px 0;
+            min-height: 20px;
+          }
+          
+          input {
+            text-align: right;
+            font-size: 0.9rem;
+            padding: 6px 8px;
+          }
+        }
+      }
+      
+      @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        
+        .pricing-fields {
+          width: 100%;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  color: #c62828;
+  
+  mat-icon {
+    color: #c62828;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 20px 24px;
+  
+  button {
+    min-width: 100px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .dialog-container {
+    max-width: 95vw;
+    margin: 16px;
+  }
+  
+  .pricing-fields {
+    grid-template-columns: 1fr;
+  }
+  
+  .dialog-actions {
+    flex-direction: column;
+    align-items: stretch;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

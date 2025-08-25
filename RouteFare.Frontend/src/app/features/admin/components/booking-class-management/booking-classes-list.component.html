@@ -1,0 +1,98 @@
+<div class="booking-classes-list-container">
+  <app-left-menu></app-left-menu>
+  
+  <div class="main-content">
+    <app-page-header title="Booking Classes"></app-page-header>
+    
+    <div class="content-wrapper">
+      <mat-card class="list-card">
+        <mat-card-header class="card-header">
+          <div class="header-actions">
+            <button mat-raised-button 
+                    color="accent" 
+                    (click)="onNewBookingClass()"
+                    class="new-button">
+              <mat-icon>add</mat-icon>
+              New Booking Class
+            </button>
+          </div>
+        </mat-card-header>
+
+
+        <mat-card-content class="list-content">
+          <div *ngIf="isLoading" class="loading-container">
+            <mat-spinner></mat-spinner>
+            <p>Loading booking classes...</p>
+          </div>
+
+          <div *ngIf="!isLoading" class="table-container">
+            <table mat-table [dataSource]="bookingClasses" class="classes-table">
+              
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let bookingClass">
+                  <div class="class-info">
+                    <div class="class-name">{{bookingClass.name}}</div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>Code</th>
+                <td mat-cell *matCellDef="let bookingClass">
+                  <span class="class-code">{{bookingClass.code}}</span>
+                </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="isActive">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let bookingClass">
+                  <span class="status-badge" [class]="getActiveStatusClass(bookingClass.isActive)">
+                    {{ getActiveStatusText(bookingClass.isActive) }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let bookingClass">
+                  <div class="action-buttons">
+                    <button mat-icon-button 
+                            matTooltip="Edit"
+                            (click)="onEditBookingClass(bookingClass)"
+                            class="action-btn edit-btn">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    
+                    <button mat-icon-button 
+                            matTooltip="Delete"
+                            color="warn"
+                            (click)="onDeleteBookingClass(bookingClass)"
+                            class="action-btn delete-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div *ngIf="bookingClasses.length === 0" class="no-data">
+              <mat-icon>airline_seat_recline_extra</mat-icon>
+              <p>No booking classes found</p>
+              <p class="no-data-subtitle">Create your first booking class to get started</p>
+              <button mat-raised-button color="primary" (click)="onNewBookingClass()" *ngIf="bookingClasses.length === 0">
+                <mat-icon>add</mat-icon>
+                Create First Booking Class
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

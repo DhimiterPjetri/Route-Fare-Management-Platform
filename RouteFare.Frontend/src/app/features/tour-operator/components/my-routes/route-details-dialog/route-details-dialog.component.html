@@ -1,0 +1,89 @@
+<mat-card class="route-details-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">Route Details: {{data.route.routeCode}}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="route-info">
+      <h3>Route Information</h3>
+      <div class="route-details-grid">
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>code</mat-icon>
+                <div>
+                  <div class="detail-label">Route Code</div>
+                  <div class="detail-value">{{data.route.routeCode}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>flight_takeoff</mat-icon>
+                <div>
+                  <div class="detail-label">Origin</div>
+                  <div class="detail-value">{{data.route.origin}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>flight_land</mat-icon>
+                <div>
+                  <div class="detail-label">Destination</div>
+                  <div class="detail-value">{{data.route.destination}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>business</mat-icon>
+                <div>
+                  <div class="detail-label">Tour Operator</div>
+                  <div class="detail-value">{{data.route.tourOperatorName}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>schedule</mat-icon>
+                <div>
+                  <div class="detail-label">Season</div>
+                  <div class="detail-value">{{data.route.seasonName}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onClose()" color="primary">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>

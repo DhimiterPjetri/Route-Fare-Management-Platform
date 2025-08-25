@@ -1,0 +1,16 @@
+// Lufthansa Font Face Definitions
+@font-face {
+  font-family: 'Lufthansa';
+  src: url('./44f45e506d893ca0440a21960df5d644.eot'); /* IE9 Compat Modes */
+  src: url('./44f45e506d893ca0440a21960df5d644.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('./44f45e506d893ca0440a21960df5d644.woff2') format('woff2'), /* Modern Browsers */
+       url('./44f45e506d893ca0440a21960df5d644.woff') format('woff'), /* Pretty Modern Browsers */
+       url('./44f45e506d893ca0440a21960df5d644.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('./44f45e506d893ca0440a21960df5d644.svg#lufthansa') format('svg'); /* Legacy iOS */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Font family variable for easy use
+$lufthansa-font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;

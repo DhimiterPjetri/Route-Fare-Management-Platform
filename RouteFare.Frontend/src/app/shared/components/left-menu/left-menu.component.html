@@ -1,0 +1,40 @@
+<div class="left-menu">
+  <div class="user-info">
+    <div class="user-avatar">
+      <mat-icon>account_circle</mat-icon>
+    </div>
+    <div class="user-details">
+      <div class="user-name">{{ userDisplayName }}</div>
+      <div class="user-role">{{ userRole }}</div>
+    </div>
+  </div>
+
+  <nav class="menu-nav">
+    <ul class="menu-list">
+      <li 
+        *ngFor="let item of menuItems" 
+        class="menu-item"
+        [class.active]="isActive(item.route)"
+        (click)="navigateTo(item.route)">
+        <div class="menu-link">
+          <mat-icon 
+            class="menu-icon" 
+            [style.color]="isActive(item.route) ? '#ffffff' : item.color">
+            {{ item.icon }}
+          </mat-icon>
+          <span class="menu-title">{{ item.title }}</span>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="logout-section">
+    <button 
+      mat-button 
+      class="logout-button" 
+      (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</div>

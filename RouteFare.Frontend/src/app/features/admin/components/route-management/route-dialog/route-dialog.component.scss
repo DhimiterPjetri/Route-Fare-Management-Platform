@@ -1,0 +1,221 @@
+mat-card.dialog-container {
+  min-width: 500px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 24px 0;
+  position: relative;
+  
+  .centered-title {
+    color: #05164d;
+    font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+  }
+  
+  h2 {
+    color: #05164d;
+    font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .close-button {
+    color: #666666;
+
+    &:hover {
+      color: #05164d;
+    }
+  }
+}
+
+.dialog-content {
+  padding: 20px 24px;
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #ffebee;
+    color: #d32f2f;
+    padding: 12px 16px;
+    border-radius: 4px;
+    border-left: 4px solid #d32f2f;
+    margin-bottom: 20px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .route-code-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 4px solid #05164d;
+
+    mat-icon {
+      color: #05164d;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .label {
+      color: #666666;
+      font-weight: 500;
+    }
+
+    .code {
+      color: #05164d;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      background-color: #ffffff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+  }
+
+  .status-field {
+    margin: 20px 0;
+
+    .mat-mdc-checkbox {
+      margin-bottom: 8px;
+    }
+
+    .status-help {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #666666;
+      font-size: 14px;
+      margin-left: 32px;
+
+      .help-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #999999;
+      }
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    min-width: 100px;
+    font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 500;
+  }
+
+  .mat-mdc-raised-button {
+    background-color: #05164d;
+
+    &:hover:not(:disabled) {
+      background-color: #041444;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      color: #666666;
+    }
+
+    mat-spinner {
+      margin-right: 8px;
+    }
+  }
+
+  .mat-mdc-button {
+    color: #05164d;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+}
+
+.mat-mdc-form-field {
+  &.mat-focused {
+    .mat-mdc-form-field-focus-overlay {
+      background-color: #05164d;
+      opacity: 0.12;
+    }
+  }
+
+  .mat-mdc-form-field-icon-suffix {
+    color: #05164d;
+  }
+}
+
+.mat-mdc-checkbox {
+  .mat-mdc-checkbox-ripple {
+    border-radius: 50%;
+  }
+
+  &.mat-mdc-checkbox-checked {
+    .mat-mdc-checkbox-background {
+      background-color: #05164d;
+      border-color: #05164d;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  mat-card.dialog-container {
+    min-width: unset;
+    max-width: 95vw;
+  }
+
+  .dialog-header {
+    padding: 16px 20px 0;
+
+    h2 {
+      font-size: 20px;
+    }
+  }
+
+  .dialog-content {
+    padding: 16px 20px;
+  }
+
+  .dialog-actions {
+    padding: 12px 20px 20px;
+  }
+
+  .route-code-preview {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    .code {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+}

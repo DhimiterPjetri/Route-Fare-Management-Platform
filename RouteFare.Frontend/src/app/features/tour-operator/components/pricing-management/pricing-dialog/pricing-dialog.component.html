@@ -1,0 +1,79 @@
+<mat-card class="dialog-container">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{ getTitle() }}</mat-card-title>
+    <button mat-icon-button mat-dialog-close class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <div class="pricing-info">
+        <p class="date-info">
+          <mat-icon>today</mat-icon>
+          <strong>{{ data.pricingRow.date | date:'EEEE, MMMM d, y' }}</strong>
+        </p>
+        <p class="help-text">Update the pricing for each booking class for this specific date.</p>
+      </div>
+
+      <div class="pricing-items" formArrayName="pricingUpdates">
+        <mat-card *ngFor="let item of pricingItems; let i = index" 
+                  class="pricing-card" 
+                  [formGroupName]="i">
+          <mat-card-content>
+            <div class="pricing-row">
+              <div class="booking-class-info">
+                <mat-icon>class</mat-icon>
+                <div>
+                  <div class="class-label">Booking Class</div>
+                  <div class="class-value">{{ item.bookingClassName }}</div>
+                </div>
+              </div>
+
+              <div class="pricing-fields">
+                <mat-form-field appearance="outline" class="price-field">
+                  <mat-label>Price</mat-label>
+                  <input matInput 
+                         type="number"
+                         formControlName="price"
+                         step="0.01"
+                         min="0"
+                         placeholder="0.00">
+                  <span matPrefix>$</span>
+                  <mat-error>{{ getFieldError(i, 'price') }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="seats-field">
+                  <mat-label>Requested Seats</mat-label>
+                  <input matInput 
+                         type="number"
+                         formControlName="requestedSeats"
+                         step="1"
+                         min="0"
+                         placeholder="0">
+                  <mat-error>{{ getFieldError(i, 'requestedSeats') }}</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            (click)="onSubmit()"
+            [disabled]="isLoading || !isPricingFormValid()">
+      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+      <span *ngIf="!isLoading">{{ getSubmitButtonText() }}</span>
+      <span *ngIf="isLoading">{{ getSubmitButtonText() }}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

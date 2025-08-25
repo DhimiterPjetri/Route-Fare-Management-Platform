@@ -1,0 +1,243 @@
+mat-card.season-assignments-dialog {
+  min-width: 600px;
+  max-width: 800px;
+  margin: 0;
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #05164d;
+    font-weight: 500;
+    margin-bottom: 0;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .dialog-content {
+    padding: 0;
+    margin: 20px 0;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .season-info {
+      margin-bottom: 20px;
+
+      h3 {
+        margin: 0 0 16px 0;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .season-details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+
+        .detail-card {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          
+          mat-card-content {
+            padding: 16px !important;
+          }
+
+          .detail-info {
+            .detail-item {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              mat-icon {
+                color: #1976d2;
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+              }
+
+              .detail-label {
+                color: #666;
+                font-size: 12px;
+                font-weight: 500;
+                margin-bottom: 4px;
+              }
+
+              .detail-value {
+                color: #333;
+                font-size: 14px;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    mat-divider {
+      margin: 20px 0;
+    }
+
+    .assignments-section {
+      h3 {
+        color: #05164d;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .loading-assignments {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 40px;
+        color: #05164d;
+        
+        span {
+          font-size: 14px;
+        }
+      }
+
+      .no-assignments {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+        color: #666;
+
+        mat-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          margin-bottom: 12px;
+          opacity: 0.5;
+        }
+
+        p {
+          font-size: 14px;
+          margin: 0;
+        }
+      }
+
+      .assignments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .assignment-card {
+          transition: transform 0.2s, box-shadow 0.2s;
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          }
+
+          mat-card-content {
+            padding: 16px;
+
+            .assignment-info {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 16px;
+
+              .route-info, .operator-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+
+                mat-icon {
+                  color: #1976d2;
+                  font-size: 20px;
+                  width: 20px;
+                  height: 20px;
+                  flex-shrink: 0;
+                }
+
+                .route-header, div {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 2px;
+                }
+
+                .route-code, .operator-name {
+                  font-weight: 500;
+                  color: #333;
+                  font-size: 14px;
+                }
+
+                .route-path, .assignment-date {
+                  font-size: 12px;
+                  color: #666;
+                }
+              }
+
+              .route-info {
+                flex: 1;
+
+                .route-header {
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                }
+              }
+
+              .operator-info {
+                text-align: right;
+                min-width: 200px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    justify-content: flex-end;
+    padding: 16px 0 8px;
+    margin: 0;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  mat-card.season-assignments-dialog {
+    min-width: 95vw;
+
+    .season-details {
+      flex-direction: column;
+      gap: 8px;
+
+      .detail-item {
+        justify-content: center;
+      }
+    }
+
+    .assignment-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .operator-info {
+        text-align: left;
+        min-width: auto;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+.page-header {
+  width: 100%;
+  background-color: #05164d;
+  height: 120px;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  
+  .logo {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+  
+  .platform-title {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .logo-section {
+    position: relative;
+    left: auto;
+  }
+  
+  .logo-section .logo {
+    height: 32px;
+  }
+  
+  .title-section {
+    margin-left: 0;
+    justify-content: center;
+  }
+  
+  .title-section .platform-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    padding: 37px 16px;
+  }
+  
+  .title-section .platform-title {
+    font-size: 16px;
+  }
+}

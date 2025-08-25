@@ -1,0 +1,120 @@
+<mat-card class="dialog-container">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{ getTitle() }}</mat-card-title>
+    <button mat-icon-button mat-dialog-close class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Company Name</mat-label>
+        <input matInput 
+               formControlName="name" 
+               placeholder="Enter company name">
+        <mat-error>{{ getFieldError('name') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Company Code</mat-label>
+        <input matInput 
+               formControlName="code" 
+               placeholder="Enter company code">
+        <mat-error>{{ getFieldError('code') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contact Email</mat-label>
+        <input matInput 
+               formControlName="contactEmail" 
+               placeholder="Enter contact email">
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error>{{ getFieldError('contactEmail') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contact Phone</mat-label>
+        <input matInput 
+               formControlName="contactPhone" 
+               placeholder="Enter contact phone">
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-error>{{ getFieldError('contactPhone') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
+        <mat-label>Booking Classes</mat-label>
+        <mat-select formControlName="bookingClassIds" multiple>
+          <mat-option *ngFor="let bookingClass of bookingClasses" [value]="bookingClass.id">
+            {{bookingClass.name}} ({{bookingClass.code}})
+          </mat-option>
+        </mat-select>
+        <mat-error>{{ getFieldError('bookingClassIds') }}</mat-error>
+      </mat-form-field>
+
+      <div class="status-field" *ngIf="data.mode === 'edit'">
+        <mat-checkbox formControlName="isActive" color="primary">
+          Tour Operator is Active
+        </mat-checkbox>
+      </div>
+    </form>
+
+    <div *ngIf="showUserForm" class="user-section">
+      <h3>Initial User Account</h3>
+      <form [formGroup]="userForm">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User Email</mat-label>
+          <input matInput 
+                 formControlName="email" 
+                 placeholder="Enter user email">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error>{{ getFieldError('email', userForm) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput 
+                 type="password"
+                 formControlName="password" 
+                 placeholder="Enter password">
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error>{{ getFieldError('password', userForm) }}</mat-error>
+        </mat-form-field>
+
+        <div class="name-fields">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input matInput 
+                   formControlName="firstName" 
+                   placeholder="First name">
+            <mat-error>{{ getFieldError('firstName', userForm) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput 
+                   formControlName="lastName" 
+                   placeholder="Last name">
+            <mat-error>{{ getFieldError('lastName', userForm) }}</mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            (click)="onSubmit()"
+            [disabled]="isLoading || form.invalid || (showUserForm && userForm.invalid)">
+      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+      <span *ngIf="!isLoading">{{ getSubmitButtonText() }}</span>
+      <span *ngIf="isLoading">{{ getSubmitButtonText() }}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

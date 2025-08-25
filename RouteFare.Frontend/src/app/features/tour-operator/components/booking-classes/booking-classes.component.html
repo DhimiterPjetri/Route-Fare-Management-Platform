@@ -1,0 +1,138 @@
+<div class="booking-classes-container">
+  <app-left-menu></app-left-menu>
+  
+  <div class="main-content">
+    <app-page-header title="Booking Classes"></app-page-header>
+    
+    <div class="content-wrapper">
+      
+      <mat-card class="classes-selection-card" *ngIf="!isLoading">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>airline_seat_recline_extra</mat-icon>
+            Configure Your Booking Classes
+          </mat-card-title>
+          <mat-card-subtitle>Select the service classes you want to offer to customers</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="classes-grid">
+            <div *ngFor="let classItem of allClasses" 
+                 class="class-card"
+                 [class.selected]="isClassSelected(classItem)">
+              
+              <div class="class-header">
+                <div class="class-info">
+                  <div class="class-details">
+                    <h4>{{ classItem.name }}</h4>
+                    <p class="class-description">{{ getClassDescription(classItem) }}</p>
+                  </div>
+                </div>
+                
+                <div class="class-status">
+                  <mat-chip *ngIf="isClassSelected(classItem)" 
+                            class="assignment-chip assigned">
+                    <span class="assignment-text">Selected</span>
+                  </mat-chip>
+                </div>
+              </div>
+
+              <div class="class-content" *ngIf="classItem.multiplier">
+                <div class="pricing-info">
+                  <mat-icon class="info-icon">trending_up</mat-icon>
+                  <span class="multiplier-text">{{ classItem.multiplier }}x base pricing</span>
+                </div>
+              </div>
+              
+              <div class="class-actions">
+                <button mat-raised-button 
+                        color="primary"
+                        *ngIf="!isClassSelected(classItem)"
+                        (click)="onClassToggle(classItem)">
+                  <mat-icon>add</mat-icon>
+                  Select Class
+                </button>
+                
+                <button mat-raised-button 
+                        color="warn"
+                        *ngIf="isClassSelected(classItem)"
+                        (click)="onClassToggle(classItem)">
+                  <mat-icon>remove</mat-icon>
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card *ngIf="selectedClassIds.size > 0" class="review-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>playlist_add_check</mat-icon>
+            Review & Save Configuration
+          </mat-card-title>
+          <mat-card-subtitle>{{ selectedClassIds.size }} booking class(es) selected</mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="selected-classes-summary">
+            <mat-chip-set>
+              <ng-container *ngFor="let classItem of allClasses">
+                <mat-chip *ngIf="isClassSelected(classItem)"
+                          [ngClass]="{'selected-chip': isClassSelected(classItem)}"
+                          color="primary"
+                          selected
+                          [removable]="true"
+                          (removed)="onClassToggle(classItem)">
+                  {{ classItem.name }}
+                  <span *ngIf="classItem.multiplier && classItem.multiplier !== 1" class="multiplier-badge">
+                    {{ classItem.multiplier }}x
+                  </span>
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              </ng-container>
+            </mat-chip-set>
+          </div>
+          
+          <div class="configuration-info" *ngIf="selectedClassIds.size > 0">
+            <mat-icon class="info-icon">info</mat-icon>
+            <p>These booking classes will be available for pricing configuration and route assignments. Each class can have different pricing levels based on the multiplier.</p>
+          </div>
+        </mat-card-content>
+        
+        <mat-card-actions class="review-actions">
+          <button mat-button (click)="onResetChanges()" [disabled]="!hasChanges || isSaving">
+            <mat-icon>undo</mat-icon>
+            Reset Changes
+          </button>
+          
+          <button mat-raised-button 
+                  color="primary" 
+                  [disabled]="!hasChanges || isSaving || selectedClassIds.size === 0"
+                  (click)="onSaveChanges()">
+            <mat-spinner *ngIf="isSaving" diameter="16" class="button-spinner"></mat-spinner>
+            <mat-icon *ngIf="!isSaving">save</mat-icon>
+            {{ isSaving ? 'Saving...' : 'Save Configuration' }}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card *ngIf="isLoading" class="loading-card">
+        <mat-card-content class="loading-content">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading booking classes...</p>
+        </mat-card-content>
+      </mat-card>
+
+
+      <mat-card *ngIf="!isLoading && allClasses.length === 0" class="empty-card">
+        <mat-card-content class="empty-content">
+          <mat-icon>airline_seat_recline_extra</mat-icon>
+          <h3>No Booking Classes Available</h3>
+          <p>No booking classes are configured in the system. Contact your administrator to set up booking classes.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

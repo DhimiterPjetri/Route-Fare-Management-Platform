@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>../RouteFare.Frontend/</SpaRoot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,5 +23,15 @@
   <ItemGroup>
     <ProjectReference Include="..\RouteFare.Infrastructure\RouteFare.Infrastructure.csproj" />
   </ItemGroup>
+
+  <Target Name="StartAngularDev" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="start /B cmd /c &quot;cd $(SpaRoot) &amp;&amp; npm install &amp;&amp; npm start&quot;" 
+          ContinueOnError="true" />
+  </Target>
+
+  <Target Name="BuildAngular" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm install" WorkingDirectory="$(SpaRoot)" />
+    <Exec Command="npm run build" WorkingDirectory="$(SpaRoot)" />
+  </Target>
 
 </Project>

@@ -1,0 +1,71 @@
+<mat-card class="dialog-container">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">Tour Operator Details</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="24"></mat-spinner>
+      <span>Loading tour operator details...</span>
+    </div>
+
+    <div *ngIf="!isLoading && tourOperator" class="details-container">
+      <div class="detail-section">
+        <h3>Company Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <strong>Company Name:</strong>
+            <span>{{tourOperator.name}}</span>
+          </div>
+          <div class="detail-item">
+            <strong>Company Code:</strong>
+            <span>{{tourOperator.code}}</span>
+          </div>
+          <div class="detail-item">
+            <strong>Status:</strong>
+            <span [class]="getStatusClass()">{{getStatusText()}}</span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="detail-section">
+        <h3>Contact Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <strong>Email:</strong>
+            <span>{{tourOperator.contactEmail}}</span>
+          </div>
+          <div class="detail-item">
+            <strong>Phone:</strong>
+            <span>{{tourOperator.contactPhone}}</span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="detail-section">
+        <h3>System Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <strong>Created:</strong>
+            <span>{{tourOperator.createdAt | date:'MMM d, y, h:mm a'}}</span>
+          </div>
+          <div class="detail-item" *ngIf="tourOperator.modifiedAt">
+            <strong>Last Modified:</strong>
+            <span>{{tourOperator.modifiedAt | date:'MMM d, y, h:mm a'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onClose()" color="primary">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>

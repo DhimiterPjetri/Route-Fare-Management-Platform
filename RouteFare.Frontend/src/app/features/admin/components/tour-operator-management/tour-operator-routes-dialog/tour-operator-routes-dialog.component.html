@@ -1,0 +1,118 @@
+<mat-card class="dialog-container">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{data.tourOperator.name}} - Route Assignments</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="operator-info">
+      <h3>Tour Operator Details</h3>
+      <div class="operator-details-grid">
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>business</mat-icon>
+                <div>
+                  <div class="detail-label">Company Name</div>
+                  <div class="detail-value">{{data.tourOperator.name}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>code</mat-icon>
+                <div>
+                  <div class="detail-label">Company Code</div>
+                  <div class="detail-value">{{data.tourOperator.code}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>email</mat-icon>
+                <div>
+                  <div class="detail-label">Contact Email</div>
+                  <div class="detail-value">{{data.tourOperator.contactEmail}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>{{data.tourOperator.isActive ? 'check_circle' : 'cancel'}}</mat-icon>
+                <div>
+                  <div class="detail-label">Status</div>
+                  <div class="detail-value">
+                    <span [class]="data.tourOperator.isActive ? 'status-active' : 'status-inactive'">
+                      {{data.tourOperator.isActive ? 'Active' : 'Inactive'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="routes-section">
+      <h3>Route Assignments <span *ngIf="!isLoading">({{routes.length}})</span></h3>
+      
+      <div *ngIf="isLoading" class="loading-routes">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Loading routes...</span>
+      </div>
+      
+      <div *ngIf="!isLoading && !hasRoutes()" class="no-routes">
+        <mat-icon>info</mat-icon>
+        <p>No routes are currently assigned to this tour operator.</p>
+      </div>
+
+      <div *ngIf="!isLoading && hasRoutes()" class="routes-list">
+        <mat-card *ngFor="let route of routes" class="route-card">
+          <mat-card-content>
+            <div class="route-info">
+              <div class="route-header">
+                <mat-icon>route</mat-icon>
+                <div>
+                  <div class="route-code">{{getRouteCode(route)}}</div>
+                  <div class="season-name">Season: {{getSeasonName(route)}}</div>
+                </div>
+              </div>
+
+              <div class="assignment-details">
+                <div class="detail-chip" *ngIf="getAssignmentDate(route)">
+                  <mat-icon>schedule</mat-icon>
+                  <span>Assigned: {{getAssignmentDate(route) | date:'MMM d, y'}}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onClose()" color="primary">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>

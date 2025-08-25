@@ -1,0 +1,27 @@
+<mat-card class="confirmation-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{ data.title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="confirmation-content">
+      <mat-icon class="warning-icon" [class.destructive]="data.isDestructive">
+        {{ data.isDestructive ? 'warning' : 'help' }}
+      </mat-icon>
+      <p class="confirmation-message">{{ data.message }}</p>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" class="cancel-button">
+      {{ data.cancelText }}
+    </button>
+    <button 
+      mat-raised-button 
+      [color]="data.isDestructive ? 'warn' : 'primary'"
+      (click)="onConfirm()"
+      class="confirm-button">
+      {{ data.confirmText }}
+    </button>
+  </mat-card-actions>
+</mat-card>

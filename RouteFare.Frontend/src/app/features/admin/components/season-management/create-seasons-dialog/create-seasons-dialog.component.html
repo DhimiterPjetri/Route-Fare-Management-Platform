@@ -1,0 +1,61 @@
+<mat-card class="create-seasons-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">Create Seasons</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="year-selection">
+      <mat-form-field appearance="outline" class="year-field">
+        <mat-label>Select Year</mat-label>
+        <mat-select [(value)]="selectedYear" (selectionChange)="onYearChange()">
+          <mat-option *ngFor="let year of availableYears" [value]="year">
+            {{year}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="seasons-preview">
+      <p>This will create the following seasons for {{selectedYear}}:</p>
+      
+      <div class="season-item">
+        <div class="season-icon winter">
+          <mat-icon>ac_unit</mat-icon>
+        </div>
+        <div class="season-info">
+          <h4>Winter Season {{selectedYear}}</h4>
+          <p>January 1 - June 30, {{selectedYear}}</p>
+        </div>
+      </div>
+
+      <div class="season-item">
+        <div class="season-icon summer">
+          <mat-icon>wb_sunny</mat-icon>
+        </div>
+        <div class="season-info">
+          <h4>Summer Season {{selectedYear}}</h4>
+          <p>July 1 - December 31, {{selectedYear}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isCreating" class="creating-progress">
+      <mat-spinner diameter="24"></mat-spinner>
+      <span>Creating seasons...</span>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()" [disabled]="isCreating">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onCreateSeasons()"
+      [disabled]="isCreating">
+      <mat-icon>add</mat-icon>
+      Create Seasons
+    </button>
+  </mat-card-actions>
+</mat-card>

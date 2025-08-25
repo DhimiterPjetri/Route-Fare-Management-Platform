@@ -1,0 +1,263 @@
+mat-card.route-details-dialog {
+  min-width: 500px;
+  max-width: 700px;
+  margin: 0;
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #05164d;
+    font-weight: 500;
+    margin-bottom: 0;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .dialog-content {
+    padding: 0;
+    margin: 20px 0;
+    max-height: 60vh;
+    overflow-y: auto;
+
+    .route-info {
+      margin-bottom: 24px;
+
+      h3 {
+        color: #05164d;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .route-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+
+        .detail-card {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          
+          mat-card-content {
+            padding: 16px !important;
+          }
+
+          .detail-info {
+            .detail-item {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              mat-icon {
+                color: #1976d2;
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+              }
+
+              .detail-label {
+                color: #666;
+                font-size: 12px;
+                font-weight: 500;
+                margin-bottom: 4px;
+              }
+
+              .detail-value {
+                color: #333;
+                font-size: 14px;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    mat-divider {
+      margin: 24px 0;
+    }
+
+    .season-section {
+      margin-bottom: 24px;
+
+      h3 {
+        color: #05164d;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .season-details {
+        .season-card {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+
+          mat-card-content {
+            padding: 16px !important;
+
+            .season-info {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .season-status {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+
+                mat-icon {
+                  color: #1976d2;
+                  font-size: 20px;
+                  width: 20px;
+                  height: 20px;
+                }
+
+                .status-label {
+                  color: #666;
+                  font-size: 12px;
+                  font-weight: 500;
+                  margin-bottom: 4px;
+                }
+
+                .status-value {
+                  .status-active {
+                    color: #4caf50;
+                    font-weight: 500;
+                  }
+
+                  .status-warning {
+                    color: #ff9800;
+                    font-weight: 500;
+                  }
+
+                  .status-inactive {
+                    color: #f44336;
+                    font-weight: 500;
+                  }
+                }
+              }
+
+              .season-dates {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+
+                .date-chip {
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                  background-color: #e3f2fd;
+                  color: #1976d2;
+                  padding: 4px 8px;
+                  border-radius: 12px;
+                  font-size: 12px;
+
+                  mat-icon {
+                    font-size: 14px;
+                    width: 14px;
+                    height: 14px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .assignment-section {
+      h3 {
+        color: #05164d;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .assignment-details {
+        .assignment-card {
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+
+          mat-card-content {
+            padding: 16px !important;
+
+            .assignment-info {
+              .assignment-date {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+
+                mat-icon {
+                  color: #1976d2;
+                  font-size: 20px;
+                  width: 20px;
+                  height: 20px;
+                }
+
+                .detail-label {
+                  color: #666;
+                  font-size: 12px;
+                  font-weight: 500;
+                  margin-bottom: 4px;
+                }
+
+                .detail-value {
+                  color: #333;
+                  font-size: 14px;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    justify-content: flex-end;
+    padding: 16px 0 8px;
+    margin: 0;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  mat-card.route-details-dialog {
+    min-width: 90vw;
+
+    .route-details-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .season-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .season-dates {
+        align-items: flex-start;
+      }
+    }
+  }
+}

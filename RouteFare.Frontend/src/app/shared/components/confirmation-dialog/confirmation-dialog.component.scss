@@ -1,0 +1,49 @@
+.confirmation-dialog {
+  min-width: 400px;
+  max-width: 500px;
+}
+
+.dialog-content {
+  padding: 24px !important;
+}
+
+.confirmation-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+
+  .warning-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #ff9800;
+    
+    &.destructive {
+      color: #f44336;
+    }
+  }
+
+  .confirmation-message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 20px 24px !important;
+  
+  .cancel-button {
+    min-width: 80px;
+  }
+  
+  .confirm-button {
+    min-width: 80px;
+  }
+}

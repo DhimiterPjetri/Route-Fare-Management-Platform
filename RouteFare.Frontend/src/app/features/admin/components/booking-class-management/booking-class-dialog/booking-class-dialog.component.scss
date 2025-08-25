@@ -1,0 +1,57 @@
+.dialog-container {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.dialog-content {
+  padding: 24px !important;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.status-field {
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .status-help {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+
+    .help-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #999;
+    }
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  color: #c62828;
+
+  mat-icon {
+    color: #f44336;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 20px 24px !important;
+}

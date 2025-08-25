@@ -1,0 +1,109 @@
+<mat-card class="season-assignments-dialog">
+  <mat-card-header class="dialog-header">
+    <mat-card-title class="centered-title">{{data.season.name}} - Route Assignments</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content class="dialog-content">
+    <div class="season-info">
+      <h3>Season Details</h3>
+      <div class="season-details-grid">
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                  <div class="detail-label">Date Range</div>
+                  <div class="detail-value">{{data.season.startDate | date:'MMM d, y'}} - {{data.season.endDate | date:'MMM d, y'}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>category</mat-icon>
+                <div>
+                  <div class="detail-label">Season Type</div>
+                  <div class="detail-value">{{data.season.seasonType === 1 ? 'Winter' : 'Summer'}} Season</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card">
+          <mat-card-content>
+            <div class="detail-info">
+              <div class="detail-item">
+                <mat-icon>{{data.season.isActive ? 'check_circle' : 'cancel'}}</mat-icon>
+                <div>
+                  <div class="detail-label">Status</div>
+                  <div class="detail-value">
+                    <span [class]="data.season.isActive ? 'status-active' : 'status-inactive'">
+                      {{data.season.isActive ? 'Active' : 'Inactive'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="assignments-section">
+      <h3>Route Assignments <span *ngIf="!isLoading">({{data.assignments.length}})</span></h3>
+      
+      <div *ngIf="isLoading" class="loading-assignments">
+        <mat-spinner diameter="24"></mat-spinner>
+        <span>Loading assignments...</span>
+      </div>
+      
+      <div *ngIf="!isLoading && !hasAssignments()" class="no-assignments">
+        <mat-icon>info</mat-icon>
+        <p>No routes are currently assigned to this season.</p>
+      </div>
+
+      <div *ngIf="!isLoading && hasAssignments()" class="assignments-list">
+        <mat-card *ngFor="let assignment of data.assignments" class="assignment-card">
+          <mat-card-content>
+            <div class="assignment-info">
+              <div class="route-info">
+                <div class="route-header">
+                  <mat-icon>route</mat-icon>
+                  <div>
+                    <div class="route-code">{{getRouteName(assignment)}}</div>
+                    <div class="route-path">{{getRouteFullName(assignment)}}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="operator-info">
+                <mat-icon>business</mat-icon>
+                <div>
+                  <div class="operator-name">{{getTourOperatorName(assignment)}}</div>
+                  <div class="assignment-date" *ngIf="getAssignmentDate(assignment)">
+                    Assigned: {{getAssignmentDate(assignment) | date:'MMM d, y'}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="dialog-actions">
+    <button mat-button (click)="onClose()" color="primary">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>
