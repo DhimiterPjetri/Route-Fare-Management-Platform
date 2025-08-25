@@ -3,10 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil, startWith, debounceTime } from 'rxjs/operators';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-
 import { TourOperatorService } from '../../../../core/services/tour-operator.service';
 import { TourOperatorDto, TourOperatorFilterDto } from '../../../../core/models/tour-operator/tour-operator.model';
 import { PagedResult } from '../../../../core/models/common/api.model';
@@ -19,18 +16,7 @@ import { TourOperatorRoutesDialogComponent, TourOperatorRoutesDialogData } from 
   selector: 'app-tour-operators-list',
   templateUrl: './tour-operators-list.component.html',
   styleUrls: ['./tour-operators-list.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class TourOperatorsListComponent implements OnInit, OnDestroy {
   

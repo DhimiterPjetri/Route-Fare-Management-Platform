@@ -11,20 +11,20 @@
 
   <nav class="menu-nav">
     <ul class="menu-list">
-      <li 
-        *ngFor="let item of menuItems" 
-        class="menu-item"
-        [class.active]="isActive(item.route)"
-        (click)="navigateTo(item.route)">
-        <div class="menu-link">
-          <mat-icon 
-            class="menu-icon" 
-            [style.color]="isActive(item.route) ? '#ffffff' : item.color">
-            {{ item.icon }}
-          </mat-icon>
-          <span class="menu-title">{{ item.title }}</span>
-        </div>
-      </li>
+      @for (item of menuItems; track item.route) {
+        <li class="menu-item"
+            [class.active]="isActive(item.route)"
+            (click)="navigateTo(item.route)">
+          <div class="menu-link">
+            <mat-icon 
+              class="menu-icon" 
+              [style.color]="isActive(item.route) ? '#ffffff' : item.color">
+              {{ item.icon }}
+            </mat-icon>
+            <span class="menu-title">{{ item.title }}</span>
+          </div>
+        </li>
+      }
     </ul>
   </nav>
 

@@ -1,4 +1,4 @@
-// Lufthansa Font Face Definitions
+// Lufthansa Font Face 
 @font-face {
   font-family: 'Lufthansa';
   src: url('./44f45e506d893ca0440a21960df5d644.eot'); /* IE9 Compat Modes */
@@ -12,5 +12,4 @@
   font-display: swap;
 }
 
-// Font family variable for easy use
 $lufthansa-font-family: 'Lufthansa', 'Helvetica Neue', Helvetica, Arial, sans-serif;

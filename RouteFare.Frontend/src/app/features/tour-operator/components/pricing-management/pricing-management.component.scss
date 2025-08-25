@@ -9,6 +9,8 @@
   display: flex;
   flex-direction: column;
   margin-left: 280px;
+  max-width: calc(100vw - 280px);
+  width: calc(100vw - 280px);
 }
 
 .content-wrapper {
@@ -472,7 +474,6 @@
   text-align: center;
 }
 
-// Export Progress Styles
 .export-progress-card {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
   border: 1px solid #2196f3;
@@ -561,14 +562,22 @@
   }
 }
 
-@keyframes slideToggle {
+.filters-container {
+  overflow: hidden;
+  
+  &.slide-toggle {
+    animation: slideIn 300ms ease-in-out;
+  }
+}
+
+@keyframes slideIn {
   from {
+    max-height: 0;
     opacity: 0;
-    transform: translateY(-10px);
   }
   to {
+    max-height: 500px;
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -632,7 +641,6 @@
     gap: 12px;
   }
 }
-// Global edit button color override
 :host ::ng-deep .edit-btn {
   color: #1976d2 !important;
   

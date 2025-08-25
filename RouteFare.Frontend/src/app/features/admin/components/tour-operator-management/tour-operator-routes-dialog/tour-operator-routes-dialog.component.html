@@ -72,40 +72,50 @@
     <mat-divider></mat-divider>
 
     <div class="routes-section">
-      <h3>Route Assignments <span *ngIf="!isLoading">({{routes.length}})</span></h3>
+      <h3>Route Assignments @if (!isLoading) {<span>({{routes.length}})</span>}</h3>
       
-      <div *ngIf="isLoading" class="loading-routes">
-        <mat-spinner diameter="24"></mat-spinner>
-        <span>Loading routes...</span>
-      </div>
+      @if (isLoading) {
+        <div class="loading-routes">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Loading routes...</span>
+        </div>
+      }
       
-      <div *ngIf="!isLoading && !hasRoutes()" class="no-routes">
-        <mat-icon>info</mat-icon>
-        <p>No routes are currently assigned to this tour operator.</p>
-      </div>
+      @if (!isLoading && !hasRoutes()) {
+        <div class="no-routes">
+          <mat-icon>info</mat-icon>
+          <p>No routes are currently assigned to this tour operator.</p>
+        </div>
+      }
 
-      <div *ngIf="!isLoading && hasRoutes()" class="routes-list">
-        <mat-card *ngFor="let route of routes" class="route-card">
-          <mat-card-content>
-            <div class="route-info">
-              <div class="route-header">
-                <mat-icon>route</mat-icon>
-                <div>
-                  <div class="route-code">{{getRouteCode(route)}}</div>
-                  <div class="season-name">Season: {{getSeasonName(route)}}</div>
+      @if (!isLoading && hasRoutes()) {
+        <div class="routes-list">
+        @for (route of routes; track route.id) {
+          <mat-card class="route-card">
+            <mat-card-content>
+              <div class="route-info">
+                <div class="route-header">
+                  <mat-icon>route</mat-icon>
+                  <div>
+                    <div class="route-code">{{getRouteCode(route)}}</div>
+                    <div class="season-name">Season: {{getSeasonName(route)}}</div>
+                  </div>
+                </div>
+
+                <div class="assignment-details">
+                  @if (getAssignmentDate(route)) {
+                    <div class="detail-chip">
+                      <mat-icon>schedule</mat-icon>
+                      <span>Assigned: {{getAssignmentDate(route) | date:'MMM d, y'}}</span>
+                    </div>
+                  }
                 </div>
               </div>
-
-              <div class="assignment-details">
-                <div class="detail-chip" *ngIf="getAssignmentDate(route)">
-                  <mat-icon>schedule</mat-icon>
-                  <span>Assigned: {{getAssignmentDate(route) | date:'MMM d, y'}}</span>
-                </div>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+            </mat-card-content>
+          </mat-card>
+        }
+        </div>
+      }
     </div>
   </mat-card-content>
 

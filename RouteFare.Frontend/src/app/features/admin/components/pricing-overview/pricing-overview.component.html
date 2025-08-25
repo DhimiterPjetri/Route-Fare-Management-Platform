@@ -22,8 +22,11 @@
                       (click)="onExportData()" 
                       [disabled]="isExporting || !exportForm.get('exportType')?.value?.length"
                       class="export-button">
-                <mat-spinner diameter="20" *ngIf="isExporting"></mat-spinner>
-                <mat-icon *ngIf="!isExporting">file_download</mat-icon>
+                @if (isExporting) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                  <mat-icon>file_download</mat-icon>
+                }
                 {{isExporting ? 'Exporting...' : 'Export Data'}}
               </button>
             </div>
@@ -38,7 +41,8 @@
           </div>
         </mat-card-header>
 
-    <mat-card class="export-progress-card" *ngIf="exportProgress">
+    @if (exportProgress) {
+      <mat-card class="export-progress-card">
       <mat-card-content>
         <div class="export-progress-container">
           <div class="progress-header">
@@ -52,18 +56,22 @@
           </div>
         </div>
       </mat-card-content>
-    </mat-card>
+      </mat-card>
+    }
 
-    <div class="filters-container" *ngIf="showFilters" [@slideToggle]>
+    @if (showFilters) {
+      <div class="filters-container slide-toggle">
           <mat-card-content>
             <div class="filter-grid" [formGroup]="filterForm">
               <mat-form-field appearance="outline">
                 <mat-label>Tour Operator</mat-label>
                 <mat-select formControlName="tourOperatorId">
                   <mat-option [value]="null">All Operators</mat-option>
-                  <mat-option *ngFor="let operator of tourOperators" [value]="operator.id">
-                    {{operator.name}}
-                  </mat-option>
+                  @for (operator of tourOperators; track operator.id) {
+                    <mat-option [value]="operator.id">
+                      {{operator.name}}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
 
@@ -71,9 +79,11 @@
                 <mat-label>Season</mat-label>
                 <mat-select formControlName="seasonId">
                   <mat-option [value]="null">All Seasons</mat-option>
-                  <mat-option *ngFor="let season of seasons" [value]="season.id">
-                    {{season.name}}
-                  </mat-option>
+                  @for (season of seasons; track season.id) {
+                    <mat-option [value]="season.id">
+                      {{season.name}}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
 
@@ -81,9 +91,11 @@
                 <mat-label>Route</mat-label>
                 <mat-select formControlName="routeId">
                   <mat-option [value]="null">All Routes</mat-option>
-                  <mat-option *ngFor="let route of routes" [value]="route.id">
-                    {{route.routeCode}} ({{route.origin}} - {{route.destination}})
-                  </mat-option>
+                  @for (route of routes; track route.id) {
+                    <mat-option [value]="route.id">
+                      {{route.routeCode}} ({{route.origin}} - {{route.destination}})
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
 
@@ -109,21 +121,27 @@
               </button>
             </div>
           </mat-card-content>
-        </div>
+      </div>
+    }
 
         <mat-card-content class="list-content">
-          <div *ngIf="isLoading" class="loading-container">
-            <mat-spinner></mat-spinner>
-            <p>Loading pricing data...</p>
-          </div>
+          @if (isLoading) {
+            <div class="loading-container">
+              <mat-spinner></mat-spinner>
+              <p>Loading pricing data...</p>
+            </div>
+          }
 
-          <div *ngIf="error" class="error-container">
-            <mat-icon color="warn">error</mat-icon>
-            <p>{{error}}</p>
-            <button mat-button (click)="loadPricingData()">Retry</button>
-          </div>
+          @if (error) {
+            <div class="error-container">
+              <mat-icon color="warn">error</mat-icon>
+              <p>{{error}}</p>
+              <button mat-button (click)="loadPricingData()">Retry</button>
+            </div>
+          }
 
-          <div *ngIf="!isLoading && !error" class="table-container">
+          @if (!isLoading && !error) {
+            <div class="table-container">
             <table mat-table [dataSource]="pricingData" class="pricing-table">
               
               <ng-container matColumnDef="operator">
@@ -180,15 +198,19 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            <div *ngIf="pricingData.length === 0" class="no-data">
-              <mat-icon>attach_money</mat-icon>
-              <p>No pricing data found</p>
-              <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
+            @if (pricingData.length === 0) {
+              <div class="no-data">
+                <mat-icon>attach_money</mat-icon>
+                <p>No pricing data found</p>
+                <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
+              </div>
+            }
             </div>
-          </div>
+          }
         </mat-card-content>
 
-        <mat-card-actions class="card-footer" *ngIf="totalCount > 0">
+        @if (totalCount > 0) {
+          <mat-card-actions class="card-footer">
           <mat-paginator 
             [pageSize]="pageSize"
             [pageIndex]="currentPage - 1"
@@ -197,7 +219,8 @@
             (page)="onPageChange($event)"
             showFirstLastButtons>
           </mat-paginator>
-        </mat-card-actions>
+          </mat-card-actions>
+        }
       </mat-card>
     </div>
   </div>

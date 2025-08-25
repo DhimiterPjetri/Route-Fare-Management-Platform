@@ -7,7 +7,8 @@
     <div class="content-wrapper">
       <mat-card class="list-card">
         <mat-card-content class="list-content">
-          <div class="table-container" *ngIf="!isLoading && routes.length > 0">
+          @if (!isLoading && routes.length > 0) {
+          <div class="table-container">
             <table mat-table [dataSource]="routes" class="routes-table">
               
               <ng-container matColumnDef="routeCode">
@@ -31,10 +32,11 @@
                 <th mat-header-cell *matHeaderCellDef>Available Classes</th>
                 <td mat-cell *matCellDef="let route">
                   <div class="booking-classes-chips">
-                    <mat-chip *ngFor="let bookingClass of route.availableBookingClasses" 
-                             class="booking-class-chip">
-                      {{ bookingClass.name }}
-                    </mat-chip>
+                    @for (bookingClass of route.availableBookingClasses; track bookingClass.id) {
+                      <mat-chip class="booking-class-chip">
+                        {{ bookingClass.name }}
+                      </mat-chip>
+                    }
                   </div>
                 </td>
               </ng-container>
@@ -69,14 +71,18 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
           </div>
+          }
 
-          <div class="loading-content" *ngIf="isLoading">
+          @if (isLoading) {
+          <div class="loading-content">
             <mat-spinner diameter="50"></mat-spinner>
             <p>Loading your routes...</p>
           </div>
+          }
 
 
-          <div class="empty-content" *ngIf="!isLoading && routes.length === 0">
+          @if (!isLoading && routes.length === 0) {
+          <div class="empty-content">
             <mat-icon>route</mat-icon>
             <h3>No Routes Assigned</h3>
             <p>You haven't been assigned any routes yet. Contact your administrator or use Route Selection to assign routes to seasons.</p>
@@ -85,6 +91,7 @@
               Select Routes
             </button>
           </div>
+          }
         </mat-card-content>
       </mat-card>
     </div>

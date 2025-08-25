@@ -4,12 +4,15 @@
   </mat-card-header>
 
   <mat-card-content class="dialog-content">
-    <div *ngIf="isLoading" class="loading-container">
+    @if (isLoading) {
+    <div class="loading-container">
       <mat-spinner diameter="24"></mat-spinner>
       <span>Loading tour operator details...</span>
     </div>
+    }
 
-    <div *ngIf="!isLoading && tourOperator" class="details-container">
+    @if (!isLoading && tourOperator) {
+    <div class="details-container">
       <div class="detail-section">
         <h3>Company Information</h3>
         <div class="detail-grid">
@@ -53,13 +56,16 @@
             <strong>Created:</strong>
             <span>{{tourOperator.createdAt | date:'MMM d, y, h:mm a'}}</span>
           </div>
-          <div class="detail-item" *ngIf="tourOperator.modifiedAt">
+          @if (tourOperator.modifiedAt) {
+          <div class="detail-item">
             <strong>Last Modified:</strong>
             <span>{{tourOperator.modifiedAt | date:'MMM d, y, h:mm a'}}</span>
           </div>
+          }
         </div>
       </div>
     </div>
+    }
   </mat-card-content>
 
   <mat-card-actions class="dialog-actions">

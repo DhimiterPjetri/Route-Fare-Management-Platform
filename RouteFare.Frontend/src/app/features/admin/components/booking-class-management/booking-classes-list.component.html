@@ -20,12 +20,15 @@
 
 
         <mat-card-content class="list-content">
-          <div *ngIf="isLoading" class="loading-container">
-            <mat-spinner></mat-spinner>
-            <p>Loading booking classes...</p>
-          </div>
+          @if (isLoading) {
+            <div class="loading-container">
+              <mat-spinner></mat-spinner>
+              <p>Loading booking classes...</p>
+            </div>
+          }
 
-          <div *ngIf="!isLoading" class="table-container">
+          @if (!isLoading) {
+            <div class="table-container">
             <table mat-table [dataSource]="bookingClasses" class="classes-table">
               
 
@@ -81,16 +84,21 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            <div *ngIf="bookingClasses.length === 0" class="no-data">
-              <mat-icon>airline_seat_recline_extra</mat-icon>
-              <p>No booking classes found</p>
-              <p class="no-data-subtitle">Create your first booking class to get started</p>
-              <button mat-raised-button color="primary" (click)="onNewBookingClass()" *ngIf="bookingClasses.length === 0">
-                <mat-icon>add</mat-icon>
-                Create First Booking Class
-              </button>
+            @if (bookingClasses.length === 0) {
+              <div class="no-data">
+                <mat-icon>airline_seat_recline_extra</mat-icon>
+                <p>No booking classes found</p>
+                <p class="no-data-subtitle">Create your first booking class to get started</p>
+                @if (bookingClasses.length === 0) {
+                  <button mat-raised-button color="primary" (click)="onNewBookingClass()">
+                    <mat-icon>add</mat-icon>
+                    Create First Booking Class
+                  </button>
+                }
+              </div>
+            }
             </div>
-          </div>
+          }
         </mat-card-content>
       </mat-card>
     </div>

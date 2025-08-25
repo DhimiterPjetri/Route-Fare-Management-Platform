@@ -5,10 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, startWith, debounceTime } from 'rxjs/operators';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-
 import { RouteService } from '../../../../core/services/route.service';
 import { TourOperatorRouteService } from '../../../../core/services/tour-operator-route.service';
 import { RouteDto, RouteFilterDto } from '../../../../core/models/route/route.model';
@@ -21,18 +18,7 @@ import { RouteUsageDialogComponent } from './route-usage-dialog/route-usage-dial
   selector: 'app-routes-list',
   templateUrl: './routes-list.component.html',
   styleUrls: ['./routes-list.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class RoutesListComponent implements OnInit, OnDestroy {
   

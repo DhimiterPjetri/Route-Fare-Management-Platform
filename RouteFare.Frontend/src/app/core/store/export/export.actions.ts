@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ExportRequestDto, ExportProgressDto } from '../../models/export/export.model';
 
-// Export actions
 export const startExport = createAction(
   '[Export] Start Export',
   props<{ request: ExportRequestDto }>()
@@ -17,7 +16,6 @@ export const startExportFailure = createAction(
   props<{ error: string }>()
 );
 
-// Progress actions
 export const updateProgress = createAction(
   '[Export] Update Progress',
   props<{ progress: ExportProgressDto }>()
@@ -27,7 +25,6 @@ export const resetProgress = createAction(
   '[Export] Reset Progress'
 );
 
-// Download actions
 export const downloadComplete = createAction(
   '[Export] Download Complete',
   props<{ filename: string }>()
@@ -42,7 +39,6 @@ export const exportError = createAction(
   props<{ error: string }>()
 );
 
-// UI actions
 export const showExportDialog = createAction(
   '[Export] Show Export Dialog'
 );

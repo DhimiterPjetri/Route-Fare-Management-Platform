@@ -7,10 +7,12 @@
   </mat-card-header>
 
   <mat-card-content class="dialog-content">
-    <div *ngIf="error" class="error-message">
-      <mat-icon>error</mat-icon>
-      <span>{{ error }}</span>
-    </div>
+    @if (error) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+    }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       
@@ -32,34 +34,43 @@
         <mat-error>{{ getFieldError('destination') }}</mat-error>
       </mat-form-field>
 
-      <div class="route-code-preview" *ngIf="form.get('origin')?.value || form.get('destination')?.value">
+      @if (form.get('origin')?.value || form.get('destination')?.value) {
+        <div class="route-code-preview">
         <mat-icon>code</mat-icon>
         <span class="label">Route Code:</span>
-        <span class="code">{{ getRouteCodePreview() }}</span>
-      </div>
+          <span class="code">{{ getRouteCodePreview() }}</span>
+        </div>
+      }
 
       <div class="booking-classes-field">
         <h4>Available Booking Classes</h4>
-        <mat-error *ngIf="hasFieldError('bookingClassIds')">{{ getFieldError('bookingClassIds') }}</mat-error>
+        @if (hasFieldError('bookingClassIds')) {
+          <mat-error>{{ getFieldError('bookingClassIds') }}</mat-error>
+        }
         
-        <div class="booking-classes-grid" *ngIf="!isLoadingBookingClasses">
-          <mat-checkbox 
-            *ngFor="let bookingClass of allBookingClasses"
-            [checked]="form.get('bookingClassIds')?.value?.includes(bookingClass.id)"
-            (change)="onBookingClassToggle(bookingClass.id, $event.checked)"
-            color="primary"
-            class="booking-class-checkbox">
-            <div class="booking-class-info">
-              <span class="name">{{ bookingClass.name }}</span>
-              <span class="code">({{ bookingClass.code }})</span>
-            </div>
-          </mat-checkbox>
-        </div>
+        @if (!isLoadingBookingClasses) {
+          <div class="booking-classes-grid">
+          @for (bookingClass of allBookingClasses; track bookingClass.id) {
+            <mat-checkbox 
+              [checked]="form.get('bookingClassIds')?.value?.includes(bookingClass.id)"
+              (change)="onBookingClassToggle(bookingClass.id, $event.checked)"
+              color="primary"
+              class="booking-class-checkbox">
+              <div class="booking-class-info">
+                <span class="name">{{ bookingClass.name }}</span>
+                <span class="code">({{ bookingClass.code }})</span>
+              </div>
+            </mat-checkbox>
+          }
+          </div>
+        }
         
-        <div class="loading-booking-classes" *ngIf="isLoadingBookingClasses">
-          <mat-spinner diameter="24"></mat-spinner>
-          <span>Loading booking classes...</span>
-        </div>
+        @if (isLoadingBookingClasses) {
+          <div class="loading-booking-classes">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Loading booking classes...</span>
+          </div>
+        }
         
         <div class="booking-classes-help">
           <mat-icon class="help-icon">info</mat-icon>
@@ -87,9 +98,15 @@
             color="primary" 
             (click)="onSubmit()"
             [disabled]="isLoading || form.invalid">
-      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-      <span *ngIf="!isLoading">{{ getSubmitButtonText() }}</span>
-      <span *ngIf="isLoading">{{ getSubmitButtonText() }}</span>
+      @if (isLoading) {
+        <mat-spinner diameter="20"></mat-spinner>
+      }
+      @if (!isLoading) {
+        <span>{{ getSubmitButtonText() }}</span>
+      }
+      @if (isLoading) {
+        <span>{{ getSubmitButtonText() }}</span>
+      }
     </button>
   </mat-card-actions>
 </mat-card>

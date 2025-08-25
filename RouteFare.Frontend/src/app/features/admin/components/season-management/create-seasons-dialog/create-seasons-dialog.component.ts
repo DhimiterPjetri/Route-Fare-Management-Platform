@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SeasonService } from '../../../../../core/services/season.service';
-import { CreateSeasonDto, SeasonType } from '../../../../../core/models/season/season.model';
-import { ErrorHandlingService } from '../../../../../core/services/error-handling.service';
 
 export interface CreateSeasonsDialogData {
   year: number;
@@ -23,7 +21,6 @@ export class CreateSeasonsDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateSeasonsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreateSeasonsDialogData,
     private seasonService: SeasonService,
-    private errorHandlingService: ErrorHandlingService
   ) {
     this.selectedYear = this.data.year;
     this.generateAvailableYears();

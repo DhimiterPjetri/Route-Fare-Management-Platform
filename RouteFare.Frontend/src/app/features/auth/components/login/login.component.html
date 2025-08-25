@@ -33,9 +33,15 @@
                   type="submit" 
                   [disabled]="!loginForm.valid || isLoading"
                   class="full-width login-button">
-            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-            <span *ngIf="!isLoading">Sign In</span>
-            <span *ngIf="isLoading">Signing In...</span>
+            @if (isLoading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
+            @if (!isLoading) {
+              <span>Sign In</span>
+            }
+            @if (isLoading) {
+              <span>Signing In...</span>
+            }
           </button>
         </div>
       </form>

@@ -3,10 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-
 import { TourOperatorRouteService } from '../../../../core/services/tour-operator-route.service';
 import { PricingService } from '../../../../core/services/pricing.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -25,18 +22,7 @@ import { PricingDialogComponent, PricingDialogData } from './pricing-dialog/pric
   selector: 'app-pricing-management',
   templateUrl: './pricing-management.component.html',
   styleUrls: ['./pricing-management.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class PricingManagementComponent implements OnInit, OnDestroy {
 

@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
@@ -16,18 +15,7 @@ import { BookingClassDialogComponent, BookingClassDialogData } from './booking-c
   selector: 'app-booking-classes-list',
   templateUrl: './booking-classes-list.component.html',
   styleUrls: ['./booking-classes-list.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class BookingClassesListComponent implements OnInit, OnDestroy {
   

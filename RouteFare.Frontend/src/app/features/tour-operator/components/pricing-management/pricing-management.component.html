@@ -17,9 +17,11 @@
             <mat-form-field appearance="outline" class="route-field">
               <mat-label>Select Route & Season</mat-label>
               <mat-select formControlName="routeSeasonId" required>
-                <mat-option *ngFor="let route of tourOperatorRoutes" [value]="route.id">
-                  {{ getRouteDisplayName(route) }}
-                </mat-option>
+                @for (route of tourOperatorRoutes; track route.id) {
+                  <mat-option [value]="route.id">
+                    {{ getRouteDisplayName(route) }}
+                  </mat-option>
+                }
               </mat-select>
               <mat-error>Please select a route and season</mat-error>
             </mat-form-field>
@@ -27,7 +29,8 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="route-details-card" *ngIf="selectedRoute">
+      @if (selectedRoute) {
+      <mat-card class="route-details-card">
         <mat-card-header>
           <mat-card-title>{{ selectedRoute.routeCode }} - {{ selectedRoute.seasonName }}</mat-card-title>
           <mat-card-subtitle>{{ selectedRoute.origin }} → {{ selectedRoute.destination }}</mat-card-subtitle>
@@ -51,8 +54,10 @@
           </div>
         </mat-card-actions>
       </mat-card>
+      }
 
-      <mat-card class="bulk-operations-card" *ngIf="showBulkOperations && selectedRoute" [@slideToggle]>
+      @if (showBulkOperations && selectedRoute) {
+      <mat-card class="bulk-operations-card slide-toggle">
         <mat-card-header>
           <mat-card-title>Bulk Operations</mat-card-title>
           <mat-card-subtitle>Apply pricing changes to multiple dates at once</mat-card-subtitle>
@@ -73,9 +78,11 @@
               <mat-form-field appearance="outline">
                 <mat-label>Booking Class</mat-label>
                 <mat-select formControlName="classId">
-                  <mat-option *ngFor="let bookingClass of tourOperatorBookingClasses" [value]="bookingClass.id">
-                    {{ bookingClass.name }}
-                  </mat-option>
+                  @for (bookingClass of tourOperatorBookingClasses; track bookingClass.id) {
+                    <mat-option [value]="bookingClass.id">
+                      {{ bookingClass.name }}
+                    </mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
               
@@ -90,18 +97,22 @@
               </mat-form-field>
             </div>
 
-            <div class="conditional-fields" *ngIf="bulkForm.get('operationType')?.value === 'SpecificDaysOfWeek'">
+            @if (bulkForm.get('operationType')?.value === 'SpecificDaysOfWeek') {
+            <div class="conditional-fields">
               <h4>Select Days of Week</h4>
               <div class="days-selection">
-                <mat-checkbox *ngFor="let day of daysOfWeekOptions; let i = index" 
-                             [checked]="isDaySelected(i)"
-                             (change)="onDaySelectionChange(i, $event.checked)">
-                  {{ day }}
-                </mat-checkbox>
+                @for (day of daysOfWeekOptions; track $index) {
+                  <mat-checkbox [checked]="isDaySelected($index)"
+                               (change)="onDaySelectionChange($index, $event.checked)">
+                    {{ day }}
+                  </mat-checkbox>
+                }
               </div>
             </div>
+            }
 
-            <div class="conditional-fields" *ngIf="bulkForm.get('operationType')?.value === 'DateRange'">
+            @if (bulkForm.get('operationType')?.value === 'DateRange') {
+            <div class="conditional-fields">
               <div class="date-range-fields">
                 <mat-form-field appearance="outline">
                   <mat-label>Start Date</mat-label>
@@ -118,6 +129,7 @@
                 </mat-form-field>
               </div>
             </div>
+            }
             
             <div class="bulk-actions">
               <button mat-raised-button color="primary" (click)="onBulkApply()" [disabled]="!isBulkFormValid()">
@@ -128,8 +140,10 @@
           </form>
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card class="export-progress-card" *ngIf="exportProgress">
+      @if (exportProgress) {
+      <mat-card class="export-progress-card">
         <mat-card-content>
           <div class="export-progress-container">
             <div class="progress-header">
@@ -144,8 +158,10 @@
           </div>
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card class="pricing-table-card" *ngIf="selectedRoute && pricingTableData">
+      @if (selectedRoute && pricingTableData) {
+      <mat-card class="pricing-table-card">
         <mat-card-header>
           <div class="table-header">
             <div class="header-actions">
@@ -154,8 +170,11 @@
                       (click)="onExportPricing()"
                       [disabled]="isExporting"
                       class="export-button">
-                <mat-spinner diameter="20" *ngIf="isExporting"></mat-spinner>
-                <mat-icon *ngIf="!isExporting">download</mat-icon>
+                @if (isExporting) {
+                <mat-spinner diameter="20"></mat-spinner>
+                } @else {
+                <mat-icon>download</mat-icon>
+                }
                 {{ isExporting ? 'Exporting...' : 'Export to Excel' }}
               </button>
             </div>
@@ -182,7 +201,8 @@
                 </td>
               </ng-container>
 
-              <ng-container *ngFor="let bookingClass of selectedRoute.availableBookingClasses" [matColumnDef]="'class_' + bookingClass.id">
+              @for (bookingClass of selectedRoute.availableBookingClasses; track bookingClass.id) {
+                <ng-container [matColumnDef]="'class_' + bookingClass.id">
                 <th mat-header-cell *matHeaderCellDef class="class-header">
                   <div class="class-header-content">
                     <strong>{{ bookingClass.name }}</strong>
@@ -203,6 +223,7 @@
                   </div>
                 </td>
               </ng-container>
+              }
 
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
@@ -224,8 +245,10 @@
 
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card *ngIf="isLoading" class="state-card loading-card">
+      @if (isLoading) {
+      <mat-card class="state-card loading-card">
         <mat-card-content>
           <div class="state-content">
             <mat-spinner diameter="48"></mat-spinner>
@@ -234,9 +257,10 @@
           </div>
         </mat-card-content>
       </mat-card>
+      }
 
-
-      <mat-card *ngIf="!isLoading && tourOperatorRoutes.length === 0" class="state-card empty-card">
+      @if (!isLoading && tourOperatorRoutes.length === 0) {
+      <mat-card class="state-card empty-card">
         <mat-card-content>
           <div class="state-content">
             <mat-icon>attach_money</mat-icon>
@@ -249,8 +273,10 @@
           </div>
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card *ngIf="!isLoading && tourOperatorRoutes.length > 0 && !selectedRoute" class="state-card empty-card">
+      @if (!isLoading && tourOperatorRoutes.length > 0 && !selectedRoute) {
+      <mat-card class="state-card empty-card">
         <mat-card-content>
           <div class="state-content">
             <mat-icon>tune</mat-icon>
@@ -259,6 +285,7 @@
           </div>
         </mat-card-content>
       </mat-card>
+      }
       
     </div>
   </div>

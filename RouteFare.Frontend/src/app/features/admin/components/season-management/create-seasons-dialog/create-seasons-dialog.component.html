@@ -8,9 +8,11 @@
       <mat-form-field appearance="outline" class="year-field">
         <mat-label>Select Year</mat-label>
         <mat-select [(value)]="selectedYear" (selectionChange)="onYearChange()">
-          <mat-option *ngFor="let year of availableYears" [value]="year">
-            {{year}}
-          </mat-option>
+          @for (year of availableYears; track year) {
+            <mat-option [value]="year">
+              {{year}}
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -39,10 +41,12 @@
       </div>
     </div>
 
-    <div *ngIf="isCreating" class="creating-progress">
+    @if (isCreating) {
+    <div class="creating-progress">
       <mat-spinner diameter="24"></mat-spinner>
       <span>Creating seasons...</span>
     </div>
+    }
   </mat-card-content>
 
   <mat-card-actions class="dialog-actions">

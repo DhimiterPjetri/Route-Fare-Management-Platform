@@ -58,45 +58,55 @@
     <mat-divider></mat-divider>
 
     <div class="assignments-section">
-      <h3>Route Assignments <span *ngIf="!isLoading">({{data.assignments.length}})</span></h3>
+      <h3>Route Assignments @if (!isLoading) {<span>({{data.assignments.length}})</span>}</h3>
       
-      <div *ngIf="isLoading" class="loading-assignments">
-        <mat-spinner diameter="24"></mat-spinner>
-        <span>Loading assignments...</span>
-      </div>
+      @if (isLoading) {
+        <div class="loading-assignments">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Loading assignments...</span>
+        </div>
+      }
       
-      <div *ngIf="!isLoading && !hasAssignments()" class="no-assignments">
-        <mat-icon>info</mat-icon>
-        <p>No routes are currently assigned to this season.</p>
-      </div>
+      @if (!isLoading && !hasAssignments()) {
+        <div class="no-assignments">
+          <mat-icon>info</mat-icon>
+          <p>No routes are currently assigned to this season.</p>
+        </div>
+      }
 
-      <div *ngIf="!isLoading && hasAssignments()" class="assignments-list">
-        <mat-card *ngFor="let assignment of data.assignments" class="assignment-card">
-          <mat-card-content>
-            <div class="assignment-info">
-              <div class="route-info">
-                <div class="route-header">
-                  <mat-icon>route</mat-icon>
+      @if (!isLoading && hasAssignments()) {
+        <div class="assignments-list">
+        @for (assignment of data.assignments; track assignment.id) {
+          <mat-card class="assignment-card">
+            <mat-card-content>
+              <div class="assignment-info">
+                <div class="route-info">
+                  <div class="route-header">
+                    <mat-icon>route</mat-icon>
+                    <div>
+                      <div class="route-code">{{getRouteName(assignment)}}</div>
+                      <div class="route-path">{{getRouteFullName(assignment)}}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="operator-info">
+                  <mat-icon>business</mat-icon>
                   <div>
-                    <div class="route-code">{{getRouteName(assignment)}}</div>
-                    <div class="route-path">{{getRouteFullName(assignment)}}</div>
+                    <div class="operator-name">{{getTourOperatorName(assignment)}}</div>
+                    @if (getAssignmentDate(assignment)) {
+                      <div class="assignment-date">
+                        Assigned: {{getAssignmentDate(assignment) | date:'MMM d, y'}}
+                      </div>
+                    }
                   </div>
                 </div>
               </div>
-
-              <div class="operator-info">
-                <mat-icon>business</mat-icon>
-                <div>
-                  <div class="operator-name">{{getTourOperatorName(assignment)}}</div>
-                  <div class="assignment-date" *ngIf="getAssignmentDate(assignment)">
-                    Assigned: {{getAssignmentDate(assignment) | date:'MMM d, y'}}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+            </mat-card-content>
+          </mat-card>
+        }
+        </div>
+      }
     </div>
   </mat-card-content>
 

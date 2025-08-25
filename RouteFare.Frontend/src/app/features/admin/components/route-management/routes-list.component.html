@@ -25,7 +25,8 @@
           </div>
         </mat-card-header>
 
-        <div class="filters-container" *ngIf="showFilters" [@slideToggle]>
+        @if (showFilters) {
+          <div class="filters-container slide-toggle">
           <mat-card-content>
             <div class="filter-grid" [formGroup]="filterForm">
               <mat-form-field appearance="outline">
@@ -51,15 +52,19 @@
               </button>
             </div>
           </mat-card-content>
-        </div>
+          </div>
+        }
 
         <mat-card-content class="list-content">
-          <div *ngIf="isLoading" class="loading-container">
-            <mat-spinner></mat-spinner>
-            <p>Loading routes...</p>
-          </div>
+          @if (isLoading) {
+            <div class="loading-container">
+              <mat-spinner></mat-spinner>
+              <p>Loading routes...</p>
+            </div>
+          }
 
-          <div *ngIf="!isLoading" class="table-container">
+          @if (!isLoading) {
+            <div class="table-container">
             <table mat-table [dataSource]="routes" class="routes-table">
               
               <ng-container matColumnDef="routeCode">
@@ -83,10 +88,11 @@
                 <th mat-header-cell *matHeaderCellDef>Available Classes</th>
                 <td mat-cell *matCellDef="let route">
                   <div class="booking-classes-chips">
-                    <mat-chip *ngFor="let bookingClass of route.availableBookingClasses" 
-                             class="booking-class-chip">
-                      {{ bookingClass.name }}
-                    </mat-chip>
+                    @for (bookingClass of route.availableBookingClasses; track bookingClass.id) {
+                      <mat-chip class="booking-class-chip">
+                        {{ bookingClass.name }}
+                      </mat-chip>
+                    }
                   </div>
                 </td>
               </ng-container>
@@ -139,15 +145,19 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            <div *ngIf="routes.length === 0" class="no-data">
-              <mat-icon>route</mat-icon>
-              <p>No routes found</p>
-              <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
+            @if (routes.length === 0) {
+              <div class="no-data">
+                <mat-icon>route</mat-icon>
+                <p>No routes found</p>
+                <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
+              </div>
+            }
             </div>
-          </div>
+          }
         </mat-card-content>
 
-        <mat-card-actions class="card-footer" *ngIf="totalCount > 0">
+        @if (totalCount > 0) {
+          <mat-card-actions class="card-footer">
           <mat-paginator 
             [pageSize]="pageSize"
             [pageIndex]="currentPage - 1"
@@ -156,7 +166,8 @@
             (page)="onPageChange($event)"
             showFirstLastButtons>
           </mat-paginator>
-        </mat-card-actions>
+          </mat-card-actions>
+        }
       </mat-card>
     </div>
   </div>

@@ -7,10 +7,12 @@
   </mat-card-header>
 
   <mat-card-content class="dialog-content">
-    <div *ngIf="error" class="error-message">
-      <mat-icon>error</mat-icon>
-      <span>{{ error }}</span>
-    </div>
+    @if (error) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+    }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       
@@ -60,9 +62,15 @@
             color="primary" 
             (click)="onSubmit()"
             [disabled]="isLoading || form.invalid">
-      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-      <span *ngIf="!isLoading">{{ getSubmitButtonText() }}</span>
-      <span *ngIf="isLoading">{{ getSubmitButtonText() }}</span>
+      @if (isLoading) {
+        <mat-spinner diameter="20"></mat-spinner>
+      }
+      @if (!isLoading) {
+        <span>{{ getSubmitButtonText() }}</span>
+      }
+      @if (isLoading) {
+        <span>{{ getSubmitButtonText() }}</span>
+      }
     </button>
   </mat-card-actions>
 </mat-card>

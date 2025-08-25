@@ -1,68 +1,78 @@
-<div class="export-progress-overlay" *ngIf="isVisible$ | async" (click)="onClose()">
-  <div class="export-progress-dialog" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h3 class="dialog-title">
-        <mat-icon>file_download</mat-icon>
-        Exporting Data
-      </h3>
-      <button mat-icon-button 
-              class="close-button" 
-              (click)="onClose()"
-              [disabled]="isExporting$ | async">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <div class="dialog-content">
-      <div class="progress-section" *ngIf="isExporting$ | async">
-        <div class="progress-info">
-          <div class="progress-percentage">{{ (progressPercentage$ | async) || 0 }}%</div>
-          <div class="progress-message">{{ (progressMessage$ | async) || 'Preparing export...' }}</div>
-        </div>
-        
-        <mat-progress-bar 
-          mode="determinate" 
-          [value]="(progressPercentage$ | async) || 0">
-        </mat-progress-bar>
+@if (isVisible$ | async) {
+  <div class="export-progress-overlay" (click)="onClose()">
+    <div class="export-progress-dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3 class="dialog-title">
+          <mat-icon>file_download</mat-icon>
+          Exporting Data
+        </h3>
+        <button mat-icon-button 
+                class="close-button" 
+                (click)="onClose()"
+                [disabled]="isExporting$ | async">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
-      <div class="success-section" *ngIf="!(isExporting$ | async) && !(error$ | async)">
-        <mat-icon class="success-icon">check_circle</mat-icon>
-        <div class="success-message">
-          <h4>Export Complete!</h4>
-          <p>Your file has been downloaded successfully.</p>
-        </div>
+      <div class="dialog-content">
+        @if (isExporting$ | async) {
+          <div class="progress-section">
+            <div class="progress-info">
+              <div class="progress-percentage">{{ (progressPercentage$ | async) || 0 }}%</div>
+              <div class="progress-message">{{ (progressMessage$ | async) || 'Preparing export...' }}</div>
+            </div>
+            
+            <mat-progress-bar 
+              mode="determinate" 
+              [value]="(progressPercentage$ | async) || 0">
+            </mat-progress-bar>
+          </div>
+        }
+
+        @if (!(isExporting$ | async) && !(error$ | async)) {
+          <div class="success-section">
+            <mat-icon class="success-icon">check_circle</mat-icon>
+            <div class="success-message">
+              <h4>Export Complete!</h4>
+              <p>Your file has been downloaded successfully.</p>
+            </div>
+          </div>
+        }
+
+        @if (error$ | async; as error) {
+          <div class="error-section">
+            <mat-icon class="error-icon">error</mat-icon>
+            <div class="error-message">
+              <h4>Export Failed</h4>
+              <p>{{ error }}</p>
+            </div>
+          </div>
+        }
       </div>
 
-      <div class="error-section" *ngIf="error$ | async as error">
-        <mat-icon class="error-icon">error</mat-icon>
-        <div class="error-message">
-          <h4>Export Failed</h4>
-          <p>{{ error }}</p>
-        </div>
+      <div class="dialog-actions">
+        @if (isExporting$ | async) {
+          <button mat-button (click)="onCancel()">
+            Cancel
+          </button>
+        }
+
+        @if (error$ | async) {
+          <button mat-raised-button 
+                  color="primary"
+                  (click)="onRetry()">
+            Try Again
+          </button>
+        }
+
+        @if (!(isExporting$ | async)) {
+          <button mat-raised-button 
+                  color="primary"
+                  (click)="onClose()">
+            Close
+          </button>
+        }
       </div>
-    </div>
-
-    <div class="dialog-actions">
-      <button mat-button 
-              (click)="onCancel()" 
-              *ngIf="isExporting$ | async">
-        Cancel
-      </button>
-
-      <button mat-raised-button 
-              color="primary"
-              (click)="onRetry()" 
-              *ngIf="error$ | async">
-        Try Again
-      </button>
-
-      <button mat-raised-button 
-              color="primary"
-              (click)="onClose()" 
-              *ngIf="!(isExporting$ | async)">
-        Close
-      </button>
     </div>
   </div>
-</div>
+}

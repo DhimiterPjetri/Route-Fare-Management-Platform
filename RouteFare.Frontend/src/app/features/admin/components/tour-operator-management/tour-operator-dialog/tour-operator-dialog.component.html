@@ -43,24 +43,31 @@
         <mat-error>{{ getFieldError('contactPhone') }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width" *ngIf="data.mode === 'create'">
+      @if (data.mode === 'create') {
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Booking Classes</mat-label>
         <mat-select formControlName="bookingClassIds" multiple>
-          <mat-option *ngFor="let bookingClass of bookingClasses" [value]="bookingClass.id">
-            {{bookingClass.name}} ({{bookingClass.code}})
-          </mat-option>
+          @for (bookingClass of bookingClasses; track bookingClass.id) {
+            <mat-option [value]="bookingClass.id">
+              {{bookingClass.name}} ({{bookingClass.code}})
+            </mat-option>
+          }
         </mat-select>
         <mat-error>{{ getFieldError('bookingClassIds') }}</mat-error>
       </mat-form-field>
+      }
 
-      <div class="status-field" *ngIf="data.mode === 'edit'">
+      @if (data.mode === 'edit') {
+      <div class="status-field">
         <mat-checkbox formControlName="isActive" color="primary">
           Tour Operator is Active
         </mat-checkbox>
       </div>
+      }
     </form>
 
-    <div *ngIf="showUserForm" class="user-section">
+    @if (showUserForm) {
+    <div class="user-section">
       <h3>Initial User Account</h3>
       <form [formGroup]="userForm">
         
@@ -102,6 +109,7 @@
         </div>
       </form>
     </div>
+    }
   </mat-card-content>
 
   <mat-card-actions class="dialog-actions">
@@ -112,9 +120,15 @@
             color="primary" 
             (click)="onSubmit()"
             [disabled]="isLoading || form.invalid || (showUserForm && userForm.invalid)">
-      <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-      <span *ngIf="!isLoading">{{ getSubmitButtonText() }}</span>
-      <span *ngIf="isLoading">{{ getSubmitButtonText() }}</span>
+      @if (isLoading) {
+      <mat-spinner diameter="20"></mat-spinner>
+      }
+      @if (!isLoading) {
+      <span>{{ getSubmitButtonText() }}</span>
+      }
+      @if (isLoading) {
+      <span>{{ getSubmitButtonText() }}</span>
+      }
     </button>
   </mat-card-actions>
 </mat-card>

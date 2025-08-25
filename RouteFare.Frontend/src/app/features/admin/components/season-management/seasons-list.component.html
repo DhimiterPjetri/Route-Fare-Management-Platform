@@ -25,14 +25,17 @@
           </div>
         </mat-card-header>
 
-        <div class="filters-container" *ngIf="showFilters" [@slideToggle]>
+        @if (showFilters) {
+        <div class="filters-container slide-toggle">
           <mat-card-content>
             <div class="filter-grid" [formGroup]="filterForm">
               <mat-form-field appearance="outline">
                 <mat-label>Year</mat-label>
                 <mat-select formControlName="year" [compareWith]="compareValues">
                   <mat-option [value]="null">All Years</mat-option>
-                  <mat-option [value]="year" *ngFor="let year of getAvailableYears()">{{year}}</mat-option>
+                  @for (year of getAvailableYears(); track year) {
+                    <mat-option [value]="year">{{year}}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
 
@@ -64,25 +67,33 @@
             </div>
           </mat-card-content>
         </div>
+        }
 
         <mat-card-content class="list-content">
-          <div *ngIf="isLoading" class="loading-container">
+          @if (isLoading) {
+          <div class="loading-container">
             <mat-spinner></mat-spinner>
             <p>Loading seasons...</p>
           </div>
+          }
 
-          <div *ngIf="!isLoading" class="seasons-content">
-            <div *ngIf="filteredYearGroups.length === 0" class="no-data">
+          @if (!isLoading) {
+          <div class="seasons-content">
+            @if (filteredYearGroups.length === 0) {
+            <div class="no-data">
               <mat-icon>calendar_today</mat-icon>
               <p>No seasons found</p>
               <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
             </div>
+            }
 
-            <div *ngFor="let yearGroup of filteredYearGroups" class="year-group">
-              <h2 class="year-header">{{yearGroup.year}}</h2>
-              
-              <div class="seasons-grid">
-                <mat-card *ngFor="let season of yearGroup.seasons" class="season-card">
+            @for (yearGroup of filteredYearGroups; track yearGroup.year) {
+              <div class="year-group">
+                <h2 class="year-header">{{yearGroup.year}}</h2>
+                
+                <div class="seasons-grid">
+                  @for (season of yearGroup.seasons; track season.id) {
+                    <mat-card class="season-card">
                   <div class="status-badge-corner compact" [class]="getUniformStatusClass(season)">
                     <span>{{getStatusText(season)}}</span>
                   </div>
@@ -120,10 +131,13 @@
                       {{season.isActive ? 'Deactivate' : 'Activate'}}
                     </button>
                   </mat-card-actions>
-                </mat-card>
+                    </mat-card>
+                  }
+                </div>
               </div>
-            </div>
+            }
           </div>
+          }
         </mat-card-content>
       </mat-card>
     </div>

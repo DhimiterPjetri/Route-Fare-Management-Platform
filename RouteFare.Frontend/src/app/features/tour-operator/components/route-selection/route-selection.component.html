@@ -20,9 +20,11 @@
             <mat-form-field appearance="outline" class="season-field">
               <mat-label>Available Seasons</mat-label>
               <mat-select formControlName="seasonId" required>
-                <mat-option *ngFor="let season of activeSeasons" [value]="season.id">
-                  {{ season.name }} ({{ season.startDate | date:'MMM yyyy' }} - {{ season.endDate | date:'MMM yyyy' }})
-                </mat-option>
+                @for (season of activeSeasons; track season.id) {
+                  <mat-option [value]="season.id">
+                    {{ season.name }} ({{ season.startDate | date:'MMM yyyy' }} - {{ season.endDate | date:'MMM yyyy' }})
+                  </mat-option>
+                }
               </mat-select>
               <mat-error>Please select a season</mat-error>
             </mat-form-field>
@@ -30,7 +32,8 @@
         </mat-card-content>
       </mat-card>
 
-      <mat-card *ngIf="selectedSeason" class="route-selection-card">
+      @if (selectedSeason) {
+      <mat-card class="route-selection-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>route</mat-icon>
@@ -45,31 +48,35 @@
               <mat-label>Search Routes</mat-label>
               <input matInput formControlName="searchTerm" placeholder="Search by route code, origin, or destination">
               <mat-icon matSuffix>search</mat-icon>
+              @if (selectionForm.get('searchTerm')?.value) {
               <button mat-icon-button 
                       matSuffix 
-                      *ngIf="selectionForm.get('searchTerm')?.value"
                       (click)="onClearSearch()"
                       type="button">
                 <mat-icon>clear</mat-icon>
               </button>
+              }
             </mat-form-field>
           </form>
 
-          <div *ngIf="!isLoading" class="routes-grid">
-            <div *ngFor="let route of filteredRoutes" class="route-card" 
-                 [class.already-assigned]="isRouteAlreadyAssigned(route)"
-                 [class.selected]="isRouteSelected(route)">
+          @if (!isLoading) {
+          <div class="routes-grid">
+            @for (route of filteredRoutes; track route.id) {
+              <div class="route-card" 
+                   [class.already-assigned]="isRouteAlreadyAssigned(route)"
+                   [class.selected]="isRouteSelected(route)">
               <div class="route-header">
                 <div class="route-code">
                   <mat-icon>flight</mat-icon>
                   <strong>{{ route.routeCode }}</strong>
                 </div>
                 <div class="route-status">
-                  <mat-chip *ngIf="isRouteAlreadyAssigned(route)" 
-                            class="assignment-chip not-assigned" 
+                  @if (isRouteAlreadyAssigned(route)) {
+                  <mat-chip class="assignment-chip not-assigned" 
                             selected>
                     <span class="assignment-text">Already Assigned</span>
                   </mat-chip>
+                  }
                 </div>
               </div>
               
@@ -80,41 +87,50 @@
                   <span class="destination">{{ route.destination }}</span>
                 </div>
                 
-                <div class="booking-classes" *ngIf="getSupportedBookingClassesForRoute(route).length > 0">
+                @if (getSupportedBookingClassesForRoute(route).length > 0) {
+                <div class="booking-classes">
                   <span class="label">Your Supported Classes:</span>
                   <mat-chip-set>
-                    <mat-chip *ngFor="let bookingClass of getSupportedBookingClassesForRoute(route)" 
-                              selected color="accent">
-                      {{ bookingClass.name }}
-                    </mat-chip>
+                    @for (bookingClass of getSupportedBookingClassesForRoute(route); track bookingClass.id) {
+                      <mat-chip selected color="accent">
+                        {{ bookingClass.name }}
+                      </mat-chip>
+                    }
                   </mat-chip-set>
                 </div>
+                }
               </div>
 
               <div class="route-actions">
+                @if (!isRouteSelected(route)) {
                 <button mat-raised-button 
                         color="primary" 
                         [disabled]="isRouteAlreadyAssigned(route) || isRouteSelected(route)"
-                        (click)="onAddRoute(route)"
-                        *ngIf="!isRouteSelected(route)">
+                        (click)="onAddRoute(route)">
                   <mat-icon>add</mat-icon>
                   Add Route
                 </button>
+                }
                 
+                @if (isRouteSelected(route)) {
                 <button mat-raised-button 
                         color="warn" 
-                        (click)="onRemoveRoute(route)"
-                        *ngIf="isRouteSelected(route)">
+                        (click)="onRemoveRoute(route)">
                   <mat-icon>remove</mat-icon>
                   Remove
                 </button>
+                }
               </div>
-            </div>
+              </div>
+            }
           </div>
+          }
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card *ngIf="selectedRoutes.length > 0" class="review-card">
+      @if (selectedRoutes.length > 0) {
+      <mat-card class="review-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>playlist_add_check</mat-icon>
@@ -126,14 +142,15 @@
         <mat-card-content>
           <div class="selected-routes-summary">
             <mat-chip-set>
-              <mat-chip *ngFor="let route of selectedRoutes" 
-                        color="primary" 
-                        selected
-                        [removable]="true"
-                        (removed)="onRemoveRoute(route)">
-                {{ route.routeCode }} ({{ route.origin }} → {{ route.destination }})
-                <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip>
+              @for (route of selectedRoutes; track route.id) {
+                <mat-chip color="primary" 
+                          selected
+                          [removable]="true"
+                          (removed)="onRemoveRoute(route)">
+                  {{ route.routeCode }} ({{ route.origin }} → {{ route.destination }})
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              }
             </mat-chip-set>
           </div>
         </mat-card-content>
@@ -148,54 +165,70 @@
                   color="primary" 
                   [disabled]="isAssigning"
                   (click)="onSaveAssignment()">
-            <mat-spinner *ngIf="isAssigning" diameter="16" class="button-spinner"></mat-spinner>
-            <mat-icon *ngIf="!isAssigning">save</mat-icon>
+            @if (isAssigning) {
+            <mat-spinner diameter="16" class="button-spinner"></mat-spinner>
+            } @else {
+            <mat-icon>save</mat-icon>
+            }
             {{ isAssigning ? 'Saving...' : 'Save Assignment' }}
           </button>
         </mat-card-actions>
       </mat-card>
+      }
 
-      <mat-card *ngIf="isLoading" class="loading-card">
+      @if (isLoading) {
+      <mat-card class="loading-card">
         <mat-card-content class="loading-content">
           <mat-spinner diameter="50"></mat-spinner>
           <p>Loading available routes...</p>
         </mat-card-content>
       </mat-card>
+      }
 
-
-      <mat-card *ngIf="!isLoading && filteredRoutes.length === 0 && !isLoadingBookingClasses" class="empty-card">
+      @if (!isLoading && filteredRoutes.length === 0 && !isLoadingBookingClasses) {
+      <mat-card class="empty-card">
         <mat-card-content class="empty-content">
           <mat-icon>route</mat-icon>
           <h3>No Available Routes</h3>
           <p>
-            <span *ngIf="tourOperatorBookingClasses.length === 0">
+            @if (tourOperatorBookingClasses.length === 0) {
+            <span>
               No routes are available because you haven't configured your booking classes yet. Please go to the Booking Classes menu to select which service classes you offer.
             </span>
-            <span *ngIf="tourOperatorBookingClasses.length > 0 && availableRoutes.length === 0">
+            }
+            @if (tourOperatorBookingClasses.length > 0 && availableRoutes.length === 0) {
+            <span>
               All routes are currently assigned or don't match your supported booking classes. Contact your administrator for more routes.
             </span>
-            <span *ngIf="tourOperatorBookingClasses.length > 0 && availableRoutes.length > 0">
+            }
+            @if (tourOperatorBookingClasses.length > 0 && availableRoutes.length > 0) {
+            <span>
               No routes match your search criteria or supported booking classes. Try adjusting your search terms.
             </span>
+            }
           </p>
-          <button *ngIf="tourOperatorBookingClasses.length === 0" 
-                  mat-raised-button 
+          @if (tourOperatorBookingClasses.length === 0) {
+          <button mat-raised-button 
                   color="primary" 
                   routerLink="/tour-operator/booking-classes">
             <mat-icon>airline_seat_recline_extra</mat-icon>
             Configure Booking Classes
           </button>
-          <button *ngIf="tourOperatorBookingClasses.length > 0 && availableRoutes.length > 0" 
-                  mat-raised-button 
+          }
+          @if (tourOperatorBookingClasses.length > 0 && availableRoutes.length > 0) {
+          <button mat-raised-button 
                   color="primary" 
                   (click)="onClearSearch()">
             <mat-icon>clear</mat-icon>
             Clear Search
           </button>
+          }
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card *ngIf="!isLoadingCurrentRoutes && currentAssignments.length > 0" class="current-assignments-card">
+      @if (!isLoadingCurrentRoutes && currentAssignments.length > 0) {
+      <mat-card class="current-assignments-card">
         <mat-card-header>
           <mat-card-title>
             <mat-icon>assignment_turned_in</mat-icon>
@@ -206,15 +239,17 @@
         
         <mat-card-content>
           <div class="assignments-by-season">
-            <div *ngFor="let season of activeSeasons" class="season-group">
-              <ng-container *ngIf="getAssignmentsForSeason(season.id).length > 0">
+            @for (season of activeSeasons; track season.id) {
+              <div class="season-group">
+              @if (getAssignmentsForSeason(season.id).length > 0) {
                 <h4 class="season-header">
                   <mat-icon>event</mat-icon>
                   {{ season.name }} ({{ season.startDate | date:'MMM yyyy' }} - {{ season.endDate | date:'MMM yyyy' }})
                 </h4>
                 
                 <div class="assignment-cards">
-                  <div *ngFor="let assignment of getAssignmentsForSeason(season.id)" class="assignment-card">
+                  @for (assignment of getAssignmentsForSeason(season.id); track assignment.id) {
+                    <div class="assignment-card">
                     <div class="assignment-header">
                       <div class="route-info">
                         <mat-icon>flight</mat-icon>
@@ -232,30 +267,38 @@
                         <span>{{ assignment.destination }}</span>
                       </div>
                       
-                      <div class="booking-classes" *ngIf="getSupportedBookingClassesForRoute(assignment).length > 0">
+                      @if (getSupportedBookingClassesForRoute(assignment).length > 0) {
+                      <div class="booking-classes">
                         <span class="label">Your Supported Classes:</span>
                         <mat-chip-set>
-                          <mat-chip *ngFor="let bookingClass of getSupportedBookingClassesForRoute(assignment)" 
-                                    selected color="accent">
-                            {{ bookingClass.name }}
-                          </mat-chip>
+                          @for (bookingClass of getSupportedBookingClassesForRoute(assignment); track bookingClass.id) {
+                            <mat-chip selected color="accent">
+                              {{ bookingClass.name }}
+                            </mat-chip>
+                          }
                         </mat-chip-set>
                       </div>
+                      }
                     </div>
-                  </div>
+                    </div>
+                  }
                 </div>
-              </ng-container>
-            </div>
+              }
+              </div>
+            }
           </div>
         </mat-card-content>
       </mat-card>
+      }
 
-      <mat-card *ngIf="isLoadingCurrentRoutes" class="loading-card">
+      @if (isLoadingCurrentRoutes) {
+      <mat-card class="loading-card">
         <mat-card-content class="loading-content">
           <mat-spinner diameter="50"></mat-spinner>
           <p>Loading current assignments...</p>
         </mat-card-content>
       </mat-card>
+      }
 
     </div>
   </div>

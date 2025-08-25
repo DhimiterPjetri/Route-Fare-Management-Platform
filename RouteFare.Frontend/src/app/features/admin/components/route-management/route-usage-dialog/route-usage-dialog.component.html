@@ -74,13 +74,17 @@
     <div class="assignments-section">
       <h3>Current Assignments</h3>
       
-      <div *ngIf="!hasAssignments()" class="no-assignments">
-        <mat-icon>info</mat-icon>
-        <p>This route is not currently assigned to any tour operators.</p>
-      </div>
+      @if (!hasAssignments()) {
+        <div class="no-assignments">
+          <mat-icon>info</mat-icon>
+          <p>This route is not currently assigned to any tour operators.</p>
+        </div>
+      }
 
-      <div *ngIf="hasAssignments()" class="assignments-list">
-        <mat-card *ngFor="let assignment of data.assignments" class="assignment-card">
+      @if (hasAssignments()) {
+        <div class="assignments-list">
+        @for (assignment of data.assignments; track assignment.id) {
+          <mat-card class="assignment-card">
           <mat-card-content>
             <div class="assignment-info">
               <div class="operator-info">
@@ -99,8 +103,10 @@
               </div>
             </div>
           </mat-card-content>
-        </mat-card>
-      </div>
+          </mat-card>
+        }
+        </div>
+      }
     </div>
   </mat-card-content>
 

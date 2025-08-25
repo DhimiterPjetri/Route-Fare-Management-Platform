@@ -2,17 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil, startWith, debounceTime } from 'rxjs/operators';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-
 import { PricingService } from '../../../../core/services/pricing.service';
 import { TourOperatorService } from '../../../../core/services/tour-operator.service';
 import { SeasonService } from '../../../../core/services/season.service';
 import { RouteService } from '../../../../core/services/route.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { SignalRService } from '../../../../core/services/signalr.service';
-
 import { PricingDto, PricingFilterDto } from '../../../../core/models/pricing/pricing.model';
 import { TourOperatorDto } from '../../../../core/models/tour-operator/tour-operator.model';
 import { SeasonDto } from '../../../../core/models/season/season.model';
@@ -24,18 +20,7 @@ import { ExportRequestDto, ExportProgressDto } from '../../../../core/models/exp
   selector: 'app-pricing-overview',
   templateUrl: './pricing-overview.component.html',
   styleUrls: ['./pricing-overview.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class PricingOverviewComponent implements OnInit, OnDestroy {
   

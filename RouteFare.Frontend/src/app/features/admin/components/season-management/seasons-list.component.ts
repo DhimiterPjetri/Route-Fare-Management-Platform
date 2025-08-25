@@ -2,11 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { takeUntil, startWith, debounceTime } from 'rxjs/operators';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-
+import { takeUntil, debounceTime } from 'rxjs/operators';
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
-
 import { SeasonService } from '../../../../core/services/season.service';
 import { TourOperatorRouteService } from '../../../../core/services/tour-operator-route.service';
 import { SeasonDto, SeasonType, SeasonFilterDto } from '../../../../core/models/season/season.model';
@@ -23,18 +20,7 @@ interface YearGroup {
   selector: 'app-seasons-list',
   templateUrl: './seasons-list.component.html',
   styleUrls: ['./seasons-list.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class SeasonsListComponent implements OnInit, OnDestroy {
   

@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ErrorHandlingService } from '../../../../core/services/error-handling.service';
 
@@ -16,18 +15,7 @@ import { RouteDetailsDialogComponent, RouteDetailsDialogData } from './route-det
   selector: 'app-my-routes',
   templateUrl: './my-routes.component.html',
   styleUrls: ['./my-routes.component.scss'],
-  standalone: false,
-  animations: [
-    trigger('slideToggle', [
-      transition(':enter', [
-        style({ height: '0', opacity: 0 }),
-        animate('300ms ease-in-out', style({ height: '*', opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ height: '0', opacity: 0 }))
-      ])
-    ])
-  ]
+  standalone: false
 })
 export class MyRoutesComponent implements OnInit, OnDestroy {
 

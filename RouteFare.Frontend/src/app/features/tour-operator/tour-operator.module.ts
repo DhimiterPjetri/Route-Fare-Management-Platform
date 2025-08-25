@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
-
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MyRoutesComponent } from './components/my-routes/my-routes.component';
 import { RouteDetailsDialogComponent } from './components/my-routes/route-details-dialog/route-details-dialog.component';

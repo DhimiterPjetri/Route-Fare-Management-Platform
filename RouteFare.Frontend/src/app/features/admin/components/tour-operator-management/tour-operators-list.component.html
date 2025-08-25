@@ -25,7 +25,8 @@
           </div>
         </mat-card-header>
 
-        <div class="filters-container" *ngIf="showFilters" [@slideToggle]>
+        @if (showFilters) {
+        <div class="filters-container slide-toggle">
           <mat-card-content>
             <div class="filter-grid" [formGroup]="filterForm">
               <mat-form-field appearance="outline">
@@ -52,14 +53,18 @@
             </div>
           </mat-card-content>
         </div>
+        }
 
         <mat-card-content class="list-content">
-          <div *ngIf="isLoading" class="loading-container">
+          @if (isLoading) {
+          <div class="loading-container">
             <mat-spinner></mat-spinner>
             <p>Loading tour operators...</p>
           </div>
+          }
 
-          <div *ngIf="!isLoading" class="table-container">
+          @if (!isLoading) {
+          <div class="table-container">
             <table mat-table [dataSource]="tourOperators" class="operators-table">
               
               <ng-container matColumnDef="name">
@@ -128,15 +133,19 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
-            <div *ngIf="tourOperators.length === 0" class="no-data">
+            @if (tourOperators.length === 0) {
+            <div class="no-data">
               <mat-icon>business</mat-icon>
               <p>No tour operators found</p>
               <p class="no-data-subtitle">Try adjusting your filters to see more results</p>
             </div>
+            }
           </div>
+          }
         </mat-card-content>
 
-        <mat-card-actions class="card-footer" *ngIf="totalCount > 0">
+        @if (totalCount > 0) {
+        <mat-card-actions class="card-footer">
           <mat-paginator 
             [pageSize]="pageSize"
             [pageIndex]="currentPage - 1"
@@ -146,6 +155,7 @@
             showFirstLastButtons>
           </mat-paginator>
         </mat-card-actions>
+        }
       </mat-card>
     </div>
   </div>

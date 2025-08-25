@@ -1,6 +1,7 @@
 .seasons-list-container {
   display: flex;
   height: 100vh;
+  position: relative;
 }
 
 .main-content {
@@ -8,6 +9,8 @@
   display: flex;
   flex-direction: column;
   margin-left: 280px;
+  width: calc(100vw - 280px);
+  max-width: calc(100vw - 280px);
 }
 
 .content-wrapper {
@@ -46,6 +49,10 @@
 .filters-container {
   border-bottom: 1px solid #e0e0e0;
   overflow: hidden;
+  
+  &.slide-toggle {
+    animation: slideIn 300ms ease-in-out;
+  }
 
   .filter-grid {
     display: grid;
@@ -64,6 +71,17 @@
       align-items: center;
       gap: 8px;
     }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
   }
 }
 

@@ -9,7 +9,6 @@ import { TourOperatorsState } from './tour-operators/tour-operators.state';
 import { BookingClassesState } from './booking-classes/booking-classes.state';
 import { PricingState } from './pricing/pricing.state';
 
-// Import all reducers
 import { authReducer } from './auth/auth.reducer';
 import { exportReducer } from './export/export.reducer';
 import { routesReducer } from './routes/routes.reducer';

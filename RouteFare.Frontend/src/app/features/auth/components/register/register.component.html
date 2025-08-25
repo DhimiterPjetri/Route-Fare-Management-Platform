@@ -65,9 +65,15 @@
                   type="submit" 
                   [disabled]="!registerForm.valid || isLoading"
                   class="full-width register-button">
-            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-            <span *ngIf="!isLoading">Create Account</span>
-            <span *ngIf="isLoading">Creating Account...</span>
+            @if (isLoading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
+            @if (!isLoading) {
+              <span>Create Account</span>
+            }
+            @if (isLoading) {
+              <span>Creating Account...</span>
+            }
           </button>
         </div>
       </form>
