@@ -1,6 +1,7 @@
 using RouteFare.Application;
 using RouteFare.Infrastructure;
 using Scalar.AspNetCore;
+using System.Reflection;
 
 // Set EPPlus license for non-commercial personal use
 Environment.SetEnvironmentVariable("EPPlusLicense", "NonCommercialPersonal:RouteFare Development");
@@ -17,6 +18,11 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
     {
+        // Set API metadata
+        document.Info.Title = "Route Fare Management API";
+        document.Info.Description = "API for managing seasonal routes and fares for multiple tour operators";
+        document.Info.Version = "v1";
+        
         document.Components ??= new();
         document.Components.SecuritySchemes ??= new Dictionary<string, Microsoft.OpenApi.Models.OpenApiSecurityScheme>();
         document.Components.SecuritySchemes.Add("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -50,6 +56,10 @@ builder.Services.AddOpenApi(options =>
 
         return Task.CompletedTask;
     });
+
+    // Include XML comments for better documentation
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
 });
 
 // Add CORS

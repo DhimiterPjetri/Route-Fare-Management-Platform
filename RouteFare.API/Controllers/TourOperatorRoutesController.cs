@@ -28,7 +28,14 @@ public class TourOperatorRoutesController : ControllerBase
         _currentUser = currentUser;
     }
 
+    /// <summary>
+    /// Get tour operator routes with optional filtering
+    /// </summary>
+    /// <param name="tourOperatorId">Optional tour operator ID filter</param>
+    /// <param name="seasonId">Optional season ID filter</param>
+    /// <param name="routeId">Optional route ID filter</param>
     [HttpGet]
+    [ProducesResponseType(typeof(List<TourOperatorRouteDto>), 200)]
     public async Task<IActionResult> GetTourOperatorRoutes([FromQuery] int? tourOperatorId, [FromQuery] int? seasonId, [FromQuery] int? routeId)
     {
         var query = _context.Set<TourOperatorRoute>()
@@ -67,7 +74,12 @@ public class TourOperatorRoutesController : ControllerBase
         return Ok(dtos);
     }
 
+    /// <summary>
+    /// Get tour operator route by ID
+    /// </summary>
+    /// <param name="id">Tour operator route ID</param>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(TourOperatorRouteDto), 200)]
     public async Task<IActionResult> GetTourOperatorRoute(int id)
     {
         var tourOperatorRoute = await _context.Set<TourOperatorRoute>()
@@ -88,7 +100,12 @@ public class TourOperatorRoutesController : ControllerBase
         return Ok(dto);
     }
 
+    /// <summary>
+    /// Remove tour operator route assignment
+    /// </summary>
+    /// <param name="id">Tour operator route ID</param>
     [HttpDelete("{id}")]
+    [ProducesResponseType(204)]
     public async Task<IActionResult> RemoveTourOperatorRoute(int id)
     {
         var tourOperatorRoute = await _context.Set<TourOperatorRoute>()

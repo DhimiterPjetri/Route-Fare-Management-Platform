@@ -17,7 +17,12 @@ public class ExportController : ControllerBase
         _exportService = exportService;
     }
 
+    /// <summary>
+    /// Export pricing data to Excel file
+    /// </summary>
+    /// <param name="request">Export request parameters including filters and export types</param>
     [HttpPost("excel")]
+    [ProducesResponseType(typeof(FileResult), 200)]
     public async Task<IActionResult> ExportToExcel([FromBody] ExportRequestDto request)
     {
         var result = await _exportService.ExportPricingDataAsync(request);

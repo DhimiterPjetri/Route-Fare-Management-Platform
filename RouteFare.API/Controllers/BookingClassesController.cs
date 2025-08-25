@@ -28,7 +28,11 @@ public class BookingClassesController : ControllerBase
         _currentUser = currentUser;
     }
 
+    /// <summary>
+    /// Get all active booking classes
+    /// </summary>
     [HttpGet]
+    [ProducesResponseType(typeof(List<BookingClassDto>), 200)]
     public async Task<IActionResult> GetBookingClasses()
     {
         var bookingClasses = await _context.BookingClasses
@@ -40,7 +44,12 @@ public class BookingClassesController : ControllerBase
         return Ok(dtos);
     }
 
+    /// <summary>
+    /// Get booking class by ID
+    /// </summary>
+    /// <param name="id">Booking class ID</param>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(BookingClassDto), 200)]
     public async Task<IActionResult> GetBookingClass(int id)
     {
         var bookingClass = await _context.BookingClasses.FindAsync(id);
@@ -52,7 +61,12 @@ public class BookingClassesController : ControllerBase
         return Ok(dto);
     }
 
+    /// <summary>
+    /// Get booking classes for a specific tour operator
+    /// </summary>
+    /// <param name="tourOperatorId">Tour operator ID</param>
     [HttpGet("tour-operator/{tourOperatorId}")]
+    [ProducesResponseType(typeof(List<BookingClassDto>), 200)]
     public async Task<IActionResult> GetTourOperatorBookingClasses(int tourOperatorId)
     {
         if (!_currentUser.IsAdmin && _currentUser.TourOperatorId != tourOperatorId)
@@ -69,8 +83,13 @@ public class BookingClassesController : ControllerBase
         return Ok(dtos);
     }
 
+    /// <summary>
+    /// Create new booking class (Admin only)
+    /// </summary>
+    /// <param name="dto">Booking class creation data</param>
     [HttpPost]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(BookingClassDto), 201)]
     public async Task<IActionResult> CreateBookingClass([FromBody] CreateBookingClassDto dto)
     {
         if (!ModelState.IsValid)
@@ -97,8 +116,14 @@ public class BookingClassesController : ControllerBase
         return CreatedAtAction(nameof(GetBookingClass), new { id = bookingClass.Id }, resultDto);
     }
 
+    /// <summary>
+    /// Update existing booking class (Admin only)
+    /// </summary>
+    /// <param name="id">Booking class ID</param>
+    /// <param name="dto">Booking class update data</param>
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(BookingClassDto), 200)]
     public async Task<IActionResult> UpdateBookingClass(int id, [FromBody] UpdateBookingClassDto dto)
     {
         if (id != dto.Id)
@@ -122,8 +147,13 @@ public class BookingClassesController : ControllerBase
         return Ok(resultDto);
     }
 
+    /// <summary>
+    /// Delete booking class (Admin only)
+    /// </summary>
+    /// <param name="id">Booking class ID</param>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteBookingClass(int id)
     {
         var bookingClass = await _context.BookingClasses.FindAsync(id);
