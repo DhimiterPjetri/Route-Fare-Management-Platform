@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: routefare-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=RouteFare123!
+      - MSSQL_PID=Developer
+      - MSSQL_USER=SA
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - routefare-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P RouteFare123! -Q 'SELECT 1' -C || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Route Fare API
+  routefare-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: routefare-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=RouteFareDB;User Id=sa;Password=RouteFare123!;TrustServerCertificate=True;MultipleActiveResultSets=true;Encrypt=false
+      - JwtSettings__Secret=ThisIsAVerySecureSecretKeyForRouteFareManagementPlatform
+      - JwtSettings__Issuer=RouteFareAPI
+      - JwtSettings__Audience=RouteFareClient
+      - JwtSettings__AccessTokenExpirationMinutes=60
+      - JwtSettings__RefreshTokenExpirationDays=7
+      - EPPlus__ExcelPackage__License=NonCommercialPersonal:RouteFare Development
+      - EPPlusLicense=NonCommercialPersonal:RouteFare Development
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - routefare-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  sqlserver_data:
+
+networks:
+  routefare-network:
+    driver: bridge

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RouteFare.Application;
 using RouteFare.Infrastructure;
 using Scalar.AspNetCore;
@@ -83,6 +84,25 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Apply Entity Framework migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var context = scope.ServiceProvider.GetRequiredService<RouteFare.Infrastructure.Data.ApplicationDbContext>();
+        await context.Database.MigrateAsync();
+        
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation("Database migrations applied successfully");
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while applying migrations");
+        throw;
+    }
+}
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -94,8 +114,22 @@ if (app.Environment.IsDevelopment())
                .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
     });
 }
+else
+{
+    // Enable API documentation in production for containerized deployment
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("RouteFare Management API - Production")
+               .WithTheme(ScalarTheme.DeepSpace)
+               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+}
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseCors("AllowAll");
 
 app.UseMiddleware<RouteFare.API.Middleware.ErrorHandlingMiddleware>();

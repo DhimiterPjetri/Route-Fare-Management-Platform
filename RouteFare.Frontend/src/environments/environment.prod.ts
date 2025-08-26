@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-api-url.com/api',
-  signalRUrl: 'https://your-production-api-url.com/exportProgressHub'
+  apiUrl: 'http://localhost:8080/api',
+  signalRUrl: 'http://localhost:8080/exportProgressHub'
 };
