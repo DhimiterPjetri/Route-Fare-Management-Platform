@@ -141,22 +141,46 @@ public class PricingService : IPricingService
 
         foreach (var update in dto.Updates)
         {
-            var pricing = await _unitOfWork.Pricings.GetPricingAsync(
-                tourOperatorRoute.TourOperatorId,
-                tourOperatorRoute.RouteId,
-                tourOperatorRoute.SeasonId,
-                update.BookingClassId,
-                update.Date);
+            var pricing = await _context.Set<Pricing>()
+                .FirstOrDefaultAsync(p => 
+                    p.TourOperatorId == tourOperatorRoute.TourOperatorId &&
+                    p.RouteId == tourOperatorRoute.RouteId &&
+                    p.SeasonId == tourOperatorRoute.SeasonId &&
+                    p.BookingClassId == update.BookingClassId &&
+                    p.Date == update.Date);
 
             if (pricing != null)
             {
                 pricing.Price = update.Price;
                 pricing.RequestedSeats = update.RequestedSeats;
-                await _unitOfWork.Pricings.UpdateAsync(pricing);
+                
+                if (_context is DbContext dbContext)
+                {
+                    dbContext.Entry(pricing).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                var newPricing = new Pricing
+                {
+                    TourOperatorId = tourOperatorRoute.TourOperatorId,
+                    RouteId = tourOperatorRoute.RouteId,
+                    SeasonId = tourOperatorRoute.SeasonId,
+                    TourOperatorRouteId = tourOperatorRoute.Id,
+                    BookingClassId = update.BookingClassId,
+                    Date = update.Date,
+                    DayOfWeek = update.Date.DayOfWeek,
+                    Price = update.Price,
+                    RequestedSeats = update.RequestedSeats,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = _currentUser.UserId ?? "System"
+                };
+                
+                _context.Set<Pricing>().Add(newPricing);
             }
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _context.SaveChangesAsync();
         return Result.Success();
     }
 

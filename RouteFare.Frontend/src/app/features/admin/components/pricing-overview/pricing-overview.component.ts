@@ -40,7 +40,7 @@ export class PricingOverviewComponent implements OnInit, OnDestroy {
   routes: RouteDto[] = [];
 
   currentPage = 1;
-  pageSize = 20;
+  pageSize = 10;
   
   private destroy$ = new Subject<void>();
 
