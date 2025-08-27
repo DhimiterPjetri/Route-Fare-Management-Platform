@@ -4,10 +4,10 @@ A full-stack Route Fare Management Platform built with Angular 20.2.1 frontend a
 
 ## Architecture Overview
 
-### Hybrid Containerized Architecture
+### Fully Containerized Architecture
 - **Backend + Database**: Fully containerized with Docker (SQL Server + .NET API)
-- **Frontend**: Local development server for optimal development experience
-- **Communication**: Cross-origin requests with CORS configuration
+- **Frontend**: Containerized Angular application with nginx
+- **Communication**: Internal Docker network communication with nginx API proxying
 
 ### Technology Stack
 
@@ -21,12 +21,13 @@ A full-stack Route Fare Management Platform built with Angular 20.2.1 frontend a
 - **EPPlus 8.1.0**
 - **Scalar.AspNetCore 2.6.9**
 
-#### Frontend (Angular 20.2.1) - Local Development
+#### Frontend (Angular 20.2.1) - Containerized
 - **Angular CLI 20.2.0**
 - **Angular Material 20.2.0**
 - **TypeScript 5.9.2**
 - **RxJS 7.8.2**
 - **SignalR Client**
+- **nginx Alpine** 
 
 #### Database - Containerized
 - **SQL Server 2022**
@@ -36,62 +37,50 @@ A full-stack Route Fare Management Platform built with Angular 20.2.1 frontend a
 ## Quick Start Guide
 
 ### Prerequisites
-- **Docker Desktop** - Required for backend services
-- **Node.js 18+** - Required for Angular frontend
-- **Angular CLI** - Install with `npm install -g @angular/cli`
+- **Docker Desktop** 
 
-### 1. Start Backend Services (Containerized)
+### 1. Start All Services (Fully Containerized)
 ```bash
-# Start SQL Server + API containers
+# Start all containers: Database + API + Frontend
 docker-compose up -d
 
-# Verify services are running
+# Verify all services are running
 docker-compose ps
 ```
 
 **Expected Output:**
 - `routefare-sqlserver`: Healthy on port 1433
 - `routefare-api`: Healthy on port 8080
+- `routefare-frontend`: Healthy on port 4200
 
-### 2. Start Frontend (Local Development)
-```bash
-# Navigate to frontend directory
-cd RouteFare.Frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-ng serve
-```
-
-### 3. Access Application
+### 2. Access Application
 - **Frontend**: http://localhost:4200
 - **API Documentation**: http://localhost:8080/scalar/v1
 - **API Health Check**: http://localhost:8080/api/health
 
-### 4. Test Login
-Use these default test accounts:
+### 3. Create Test Users and Login
+Since this is a fresh installation, you'll need to register users first:
 
-**Admin User:**
-- Email: `admin@test.com`
-- Password: `Admin123!`
+**Register Admin User:**
+- Navigate to registration page or use API: `POST /api/auth/register`
+- Example credentials: `first@admin.com` / `Test1234` / Role: `Admin`
 
-**Tour Operator User:**
-- Email: `operator@test.com`
-- Password: `Operator123!`
+**Login:**
+Use the credentials you created during registration.
 
 ## Development Workflow
 
 ```bash
-# Start backend
+# Start all services
 docker-compose up -d
 
-# Start frontend development
-cd RouteFare.Frontend
-ng serve
-
 # Your app is now running at http://localhost:4200
+
+# Stop all services
+docker-compose down
+
+# Rebuild after code changes
+docker-compose up --build -d
 ```
 ### Access Database
 Connect to the containerized SQL Server using:
@@ -101,14 +90,19 @@ Connect to the containerized SQL Server using:
 - **Password**: `RouteFare123!`
 - **Database**: `RouteFareDB`
 
-### Database Management
+### Container Management
 ```bash
-# View logs
+# View logs for specific services
 docker-compose logs routefare-api
+docker-compose logs routefare-frontend
 docker-compose logs routefare-sqlserver
 
-# Rebuild API after code changes
-docker-compose up --build -d routefare-api
+# Rebuild specific service after code changes
+docker-compose up --build -d routefare-api      # Backend changes
+docker-compose up --build -d routefare-frontend # Frontend changes
+
+# Monitor all services
+docker-compose ps
 ```
 
 
@@ -119,8 +113,11 @@ docker-compose up --build -d routefare-api
 ├── RouteFare.Application/     # Application services, DTOs, business logic
 ├── RouteFare.Infrastructure/  # Data access, repositories, external services
 ├── RouteFare.API/             # Web API controllers, middleware, configuration
-├── RouteFare.Frontend/        # Angular application
-├── docker-compose.yml         # Container orchestration
+├── RouteFare.Frontend/        # Angular application (containerized)
+│   ├── Dockerfile             # Frontend container definition  
+│   ├── nginx.conf             # nginx configuration with API proxying
+│   └── .dockerignore          # Docker ignore file
+├── docker-compose.yml         # Container orchestration (all services)
 ├── Dockerfile                 # API container definition
 └── DOCKER-SETUP.md            # Detailed Docker documentation
 ```

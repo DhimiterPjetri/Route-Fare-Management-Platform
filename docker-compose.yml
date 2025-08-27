@@ -34,7 +34,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=RouteFareDB;User Id=sa;Password=RouteFare123!;TrustServerCertificate=True;MultipleActiveResultSets=true;Encrypt=false
-      - JwtSettings__Secret=RouteFareManagementPlatformKey
+      - JwtSettings__Secret=RouteFareManagementPlatformSecureJwtKey2025!
       - JwtSettings__Issuer=RouteFareAPI
       - JwtSettings__Audience=RouteFareClient
       - JwtSettings__AccessTokenExpirationMinutes=60
@@ -55,6 +55,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  # Route Fare Frontend
+  routefare-frontend:
+    build:
+      context: ./RouteFare.Frontend
+      dockerfile: Dockerfile
+    container_name: routefare-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      routefare-api:
+        condition: service_healthy
+    networks:
+      - routefare-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 volumes:
   sqlserver_data:

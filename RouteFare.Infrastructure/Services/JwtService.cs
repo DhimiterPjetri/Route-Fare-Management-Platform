@@ -21,7 +21,7 @@ public class JwtService
     public string GenerateAccessToken(ApplicationUser user, string role)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
         
         var claims = new List<Claim>
         {
@@ -58,7 +58,7 @@ public class JwtService
     public ClaimsPrincipal? ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+        var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
 
         try
         {
