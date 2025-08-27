@@ -34,7 +34,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=RouteFareDB;User Id=sa;Password=RouteFare123!;TrustServerCertificate=True;MultipleActiveResultSets=true;Encrypt=false
-      - JwtSettings__Secret=ThisIsAVerySecureSecretKeyForRouteFareManagementPlatform
+      - JwtSettings__Secret=RouteFareManagementPlatformKey
       - JwtSettings__Issuer=RouteFareAPI
       - JwtSettings__Audience=RouteFareClient
       - JwtSettings__AccessTokenExpirationMinutes=60

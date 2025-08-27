@@ -1,4 +1,4 @@
-# RouteFareManagement Platform
+# Route Fare Management Platform
 
 A full-stack Route Fare Management Platform built with Angular 20.2.1 frontend and .NET 9 Web API backend. The system manages seasonal routes and fares for multiple tour operators with role-based access control, real-time Excel export functionality, and Docker containerization for easy deployment.
 
