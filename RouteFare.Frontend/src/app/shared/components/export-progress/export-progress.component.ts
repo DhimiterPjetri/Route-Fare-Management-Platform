@@ -38,9 +38,7 @@ export class ExportProgressComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(isExporting => {
         if (!isExporting) {
-          setTimeout(() => {
-            this.onClose();
-          }, 2000);
+          this.onClose();
         }
       });
   }

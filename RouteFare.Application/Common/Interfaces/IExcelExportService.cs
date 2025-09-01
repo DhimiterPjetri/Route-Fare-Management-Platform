@@ -5,5 +5,5 @@ namespace RouteFare.Application.Common.Interfaces;
 
 public interface IExcelExportService
 {
-    Task<Result<byte[]>> ExportPricingDataAsync(ExportRequestDto request);
+    Task<ExportResult<byte[]>> ExportPricingDataAsync(ExportRequestDto request);
 }

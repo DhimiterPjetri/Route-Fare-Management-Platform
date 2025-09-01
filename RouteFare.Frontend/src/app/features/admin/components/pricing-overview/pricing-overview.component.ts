@@ -109,13 +109,11 @@ export class PricingOverviewComponent implements OnInit, OnDestroy {
   }
 
   private handleExportComplete(): void {
-    setTimeout(() => {
-      this.isExporting = false;
-      this.exportProgress = null;
-      this.signalRService.clearProgress();
-      
-      this.errorHandlingService.showSuccessMessage('Export completed successfully. File download should start automatically.');
-    }, 2000);
+    this.isExporting = false;
+    this.exportProgress = null;
+    this.signalRService.clearProgress();
+    
+    this.errorHandlingService.showSuccessMessage('Export completed successfully. File download should start automatically.');
   }
 
   private loadFilterData(): void {
@@ -230,10 +228,11 @@ export class PricingOverviewComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (blob) => {
-          if (blob && this.exportProgress && this.exportProgress.progress < 100) {
+          if (blob) {
             const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
             const filename = `pricing-overview-${timestamp}.xlsx`;
             this.exportService.downloadFile(blob, filename);
+            this.isExporting = false;
           }
         },
         error: () => {

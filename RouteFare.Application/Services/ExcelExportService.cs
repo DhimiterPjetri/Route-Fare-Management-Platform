@@ -28,7 +28,7 @@ public class ExcelExportService : IExcelExportService
         _exportProgressHub = exportProgressHub;
     }
 
-    public async Task<Result<byte[]>> ExportPricingDataAsync(ExportRequestDto request)
+    public async Task<ExportResult<byte[]>> ExportPricingDataAsync(ExportRequestDto request)
     {
         try
         {
@@ -88,7 +88,7 @@ public class ExcelExportService : IExcelExportService
             var excelData = package.GetAsByteArray();
 
             await SendProgressUpdate(jobId, 100, "Export complete!");
-            return Result<byte[]>.Success(excelData);
+            return ExportResult<byte[]>.Success(excelData, jobId);
         }
         catch (Exception ex)
         {

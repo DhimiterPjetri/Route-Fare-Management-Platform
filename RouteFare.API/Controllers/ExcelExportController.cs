@@ -27,6 +27,11 @@ public class ExportController : ControllerBase
     {
         var result = await _exportService.ExportPricingDataAsync(request);
 
+        if (!string.IsNullOrEmpty(result.JobId))
+        {
+            Response.Headers["X-Job-Id"] = result.JobId;
+        }
+
         var fileName = $"PricingData_{DateTime.UtcNow:yyyyMMdd_HHmmss}.xlsx";
         return File(result.Data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }
